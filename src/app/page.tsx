@@ -14,7 +14,7 @@ const Chat = () => {
       className="flex flex-col overflow-hidden relative"
       style={{ height: "calc(var(--vh, 1vh) * 100)" }}
     >
-      <Messages messages={messages} />
+      <Messages messages={messages} status={status} />
       <ChatComposer
         onSubmit={() => {
           const hasText = Boolean(input.trim());
