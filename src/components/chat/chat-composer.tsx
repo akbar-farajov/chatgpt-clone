@@ -9,23 +9,23 @@ import {
 
 import { ChatStatus } from "ai";
 import { GlobeIcon } from "lucide-react";
+import { FC } from "react";
 
-type ChatComposerProps = {
+interface ChatComposerProps {
   onSubmit: () => void;
   onStop: () => void;
   setInput: (input: string) => void;
   input: string;
-
   status: ChatStatus;
-};
-export const ChatComposer = ({
+}
+export const ChatComposer: FC<ChatComposerProps> = ({
   setInput,
   input,
 
   status,
   onSubmit,
   onStop,
-}: ChatComposerProps) => {
+}) => {
   return (
     <PromptInput
       onSubmit={onSubmit}

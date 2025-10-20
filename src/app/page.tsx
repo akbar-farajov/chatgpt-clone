@@ -1,37 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import { useChat } from "@ai-sdk/react";
+import { Button } from "@/components/ui/button";
+import { createChat } from "@/actions/chat";
+import { redirect } from "next/navigation";
 
-import { Messages } from "@/components/chat/messages";
-import { ChatComposer } from "@/components/chat/chat-composer";
-
-const Chat = () => {
-  const [input, setInput] = useState("");
-  const { messages, sendMessage, status, stop } = useChat();
-
-  return (
-    <div
-      className="flex flex-col overflow-hidden relative"
-      style={{ height: "calc(var(--vh, 1vh) * 100)" }}
-    >
-      <Messages messages={messages} />
-      <ChatComposer
-        onSubmit={() => {
-          const hasText = Boolean(input.trim());
-          if (!hasText) {
-            return;
-          }
-
-          sendMessage({ text: input });
-          setInput("");
-        }}
-        onStop={stop}
-        setInput={setInput}
-        input={input}
-        status={status}
-      />
-    </div>
-  );
-};
-
-export default Chat;
+export default function Home() {
+  const handleCreateChat = async () => {
+    const { data } = await createChat();
+    redirect(`/chat/${data?.id}`);
+  };
+  return <Button onClick={handleCreateChat}>Click me</Button>;
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { Conversation } from "../ai-elements/conversation";
 import { ConversationContent } from "../ai-elements/conversation";
 import { ConversationEmptyState } from "../ai-elements/conversation";
@@ -9,12 +9,18 @@ import { Response } from "../ai-elements/response";
 import { cn } from "@/lib/utils";
 import { MessageAvatar } from "../ai-elements/message";
 import { ConversationScrollButton } from "../ai-elements/conversation";
-import { UIMessage } from "ai";
+import { ChatStatus, UIMessage } from "ai";
+import { Loader } from "../ai-elements/loader";
 
-export const Messages = ({ messages }: { messages: UIMessage[] }) => {
+interface MessagesProps {
+  messages: UIMessage[];
+  status: ChatStatus;
+}
+
+export const Messages: FC<MessagesProps> = ({ messages, status }) => {
   return (
-    <Conversation className="relative size-full pb-4">
-      <ConversationContent className="max-w-3xl mx-auto pb-44">
+    <Conversation className="relative size-full mb-44">
+      <ConversationContent className="max-w-3xl mx-auto">
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}
@@ -41,15 +47,10 @@ export const Messages = ({ messages }: { messages: UIMessage[] }) => {
                   }
                 })}
               </MessageContent>
-              <MessageAvatar
-                name={message.role === "user" ? "User" : "Assistant"}
-                src={
-                  message.role === "user" ? "https://github.com/shadcn.png" : ""
-                }
-              />
             </Message>
           ))
         )}
+        {status === "submitted" || (status === "streaming" && <Loader />)}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>
