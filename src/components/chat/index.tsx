@@ -31,7 +31,7 @@ const Chat: FC<ChatProps> = ({ chatId, initialMessages }) => {
 
   return (
     <div
-      className="flex flex-col overflow-hidden relative"
+      className="flex flex-col overflow-hidden relative h-full"
       //   style={{ height: "calc(var(--vh, 1vh) * 100)" }}
     >
       <Messages messages={messages} status={status} />

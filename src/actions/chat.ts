@@ -20,6 +20,7 @@ export async function createChat() {
       .from("chats")
       .insert({
         user_id: user.id,
+        title: `Chat ${new Date().toLocaleDateString()}`,
       })
       .select("id")
       .single();
@@ -77,6 +78,38 @@ export async function getMessagesByChatId(
     }));
 
     return messages as UIMessage[];
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getChats() {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase.from("chats").select("*");
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getChatById(chatId: number) {
+  const supabase = await createClient();
+  try {
+    const { data, error } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("id", chatId)
+      .single();
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
   } catch (error) {
     console.error(error);
     return null;
