@@ -13,8 +13,8 @@ import { UIMessage } from "ai";
 
 export const Messages = ({ messages }: { messages: UIMessage[] }) => {
   return (
-    <Conversation className="relative size-full pb-44 scroll-smooth">
-      <ConversationContent className="max-w-3xl mx-auto">
+    <Conversation className="relative size-full pb-4">
+      <ConversationContent className="max-w-3xl mx-auto pb-44">
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}

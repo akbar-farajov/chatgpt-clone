@@ -1,4 +1,3 @@
-import React, { FormEvent } from "react";
 import {
   PromptInput,
   PromptInputBody,
@@ -16,15 +15,13 @@ type ChatComposerProps = {
   onStop: () => void;
   setInput: (input: string) => void;
   input: string;
-  // suggestions: string[];
-  // handleSuggestionClick: (suggestion: string) => void;
+
   status: ChatStatus;
 };
 export const ChatComposer = ({
   setInput,
   input,
-  // suggestions,
-  // handleSuggestionClick,
+
   status,
   onSubmit,
   onStop,
@@ -32,7 +29,7 @@ export const ChatComposer = ({
   return (
     <PromptInput
       onSubmit={onSubmit}
-      className="mt-4 fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl p-2 mb-4 shadow-xs bg-background rounded-lg"
+      className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl pb-4 shadow-xs bg-background rounded-lg"
     >
       <PromptInputBody>
         <PromptInputTextarea
@@ -45,16 +42,6 @@ export const ChatComposer = ({
           <GlobeIcon size={16} />
           <span>Search</span>
         </PromptInputButton>
-        {/* <Suggestions>
-          {suggestions.map((suggestion) => (
-            <Suggestion
-              disabled={status === "streaming" || status === "submitted"}
-              key={suggestion}
-              onClick={handleSuggestionClick}
-              suggestion={suggestion}
-            />
-          ))}
-        </Suggestions> */}
         <PromptInputSubmit
           disabled={!input.trim() && status !== "streaming"}
           status={status}
