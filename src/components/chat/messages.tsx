@@ -19,8 +19,8 @@ interface MessagesProps {
 
 export const Messages: FC<MessagesProps> = ({ messages, status }) => {
   return (
-    <Conversation className="relative size-full pb-4">
-      <ConversationContent className="max-w-3xl mx-auto pb-44 flex flex-col items-center justify-center">
+    <Conversation className="relative size-full mb-44">
+      <ConversationContent className="max-w-3xl mx-auto">
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}
@@ -47,16 +47,10 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
                   }
                 })}
               </MessageContent>
-              <MessageAvatar
-                name={message.role === "user" ? "User" : "Assistant"}
-                src={
-                  message.role === "user" ? "https://github.com/shadcn.png" : ""
-                }
-              />
             </Message>
           ))
         )}
-        {status === "submitted" && <Loader />}
+        {status === "submitted" || (status === "streaming" && <Loader />)}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>
