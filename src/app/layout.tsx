@@ -34,7 +34,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {" "}
+          <div className="max-h-scren h-screen flex flex-col">{children}</div>
         </ThemeProvider>
       </body>
     </html>

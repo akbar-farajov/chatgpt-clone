@@ -19,8 +19,8 @@ interface MessagesProps {
 
 export const Messages: FC<MessagesProps> = ({ messages, status }) => {
   return (
-    <Conversation className="relative size-full mb-44">
-      <ConversationContent className="max-w-3xl mx-auto">
+    <Conversation className="relative size-full mb-44 scroll-smooth">
+      <ConversationContent className="max-w-5xl mx-auto">
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}
