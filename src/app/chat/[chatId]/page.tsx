@@ -1,9 +1,9 @@
 import Chat from "@/components/chat";
 
 import React from "react";
-import { getMessagesByChatId } from "@/actions/chat";
+import { getChatById, getMessagesByChatId } from "@/actions/chat";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const ChatPage = async ({
   params,
@@ -18,6 +18,11 @@ const ChatPage = async ({
     redirect("/login");
   }
   const { chatId } = await params;
+  const chat = await getChatById(parseInt(chatId));
+
+  if (!chat) {
+    notFound();
+  }
 
   const initialMessages = (await getMessagesByChatId(parseInt(chatId))) || [];
 
