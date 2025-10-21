@@ -1,7 +1,7 @@
 import Chat from "@/components/chat";
 
 import React from "react";
-import { getChatById, getMessagesByChatId } from "@/actions/chat";
+import { getChatById, getMessagesByChatId, getChats } from "@/actions/chat";
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 
@@ -25,8 +25,16 @@ const ChatPage = async ({
   }
 
   const initialMessages = (await getMessagesByChatId(parseInt(chatId))) || [];
+  const chats = (await getChats()) || [];
 
-  return <Chat chatId={chatId} initialMessages={initialMessages} />;
+  return (
+    <Chat
+      chatId={chatId}
+      initialMessages={initialMessages}
+      chats={chats}
+      initialTitle={chat.title}
+    />
+  );
 };
 
 export default ChatPage;
