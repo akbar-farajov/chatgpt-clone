@@ -1,9 +1,4 @@
-import {
-  Ellipsis,
-  LogOutIcon,
-  MessageCircleIcon,
-  SquarePenIcon,
-} from "lucide-react";
+import { Ellipsis } from "lucide-react";
 
 import {
   Sidebar,
@@ -19,14 +14,19 @@ import {
 import { Chat } from "@/types/chat";
 import { FC } from "react";
 import Link from "next/link";
-import { createChat } from "@/actions/chat";
 import { NewChatButton } from "./new-chat-button";
 import { NavUser } from "./nav-user";
 interface AppSidebarProps {
   chats: Chat[];
+  currentChatId?: string;
+  currentTitle?: string;
 }
 
-export const AppSidebar: FC<AppSidebarProps> = ({ chats }) => {
+export const AppSidebar: FC<AppSidebarProps> = ({
+  chats,
+  currentChatId,
+  currentTitle,
+}) => {
   return (
     <Sidebar>
       <SidebarContent>
@@ -41,16 +41,27 @@ export const AppSidebar: FC<AppSidebarProps> = ({ chats }) => {
         </SidebarGroup>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarGroupLabel>Chats</SidebarGroupLabel>
-          {chats.map((chat) => (
-            <SidebarMenuItem key={chat.id}>
-              <Link href={`/chat/${chat.id}`} className="w-full">
-                <SidebarMenuButton className="justify-between w-full">
-                  <span>{chat.title}</span>
-                  <Ellipsis className="size-4 opacity-0 group-hover/menu-item:opacity-100 transition-opacity" />
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
+          {chats.map((chat) => {
+            const displayTitle =
+              currentChatId &&
+              chat.id.toString() === currentChatId &&
+              currentTitle
+                ? currentTitle
+                : chat.title || "New Chat";
+            return (
+              <SidebarMenuItem key={chat.id}>
+                <Link href={`/chat/${chat.id}`} className="w-full">
+                  <SidebarMenuButton
+                    className="justify-between w-full"
+                    isActive={currentChatId === chat.id.toString()}
+                  >
+                    <span>{displayTitle}</span>
+                    <Ellipsis className="size-4 opacity-0 group-hover/menu-item:opacity-100 transition-opacity" />
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

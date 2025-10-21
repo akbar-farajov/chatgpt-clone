@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar/sidebar";
-import { getChats } from "@/actions/chat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +23,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const chats = await getChats();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -39,15 +34,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar chats={chats ?? []} />
-            <div className="max-h-scren h-screen flex flex-col w-full">
-              <nav className="p-2 border-b ">
-                <SidebarTrigger />
-              </nav>
-              {children}
-            </div>
-          </SidebarProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>
