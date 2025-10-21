@@ -12,6 +12,7 @@ interface ChatProps {
 }
 
 const Chat: FC<ChatProps> = ({ chatId, initialMessages }) => {
+  const [title, setTitle] = useState<string | undefined>(undefined);
   const [input, setInput] = useState("");
   const { messages, sendMessage, status, stop } = useChat({
     id: chatId,
@@ -27,6 +28,11 @@ const Chat: FC<ChatProps> = ({ chatId, initialMessages }) => {
         };
       },
     }),
+    onData({ data, type }) {
+      if (type === "data-title") {
+        setTitle(data as string);
+      }
+    },
   });
 
   return (
@@ -34,6 +40,7 @@ const Chat: FC<ChatProps> = ({ chatId, initialMessages }) => {
       className="flex flex-col overflow-hidden relative h-full"
       //   style={{ height: "calc(var(--vh, 1vh) * 100)" }}
     >
+      {title && <div className="text-sm text-muted-foreground">{title}</div>}
       <Messages messages={messages} status={status} />
       <ChatComposer
         onSubmit={() => {

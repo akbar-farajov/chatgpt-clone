@@ -1,4 +1,10 @@
-import { createChat, getMessagesByChatId, saveMessage } from "@/actions/chat";
+import {
+  generateTitleFromUserMessage,
+  getChatById,
+  getMessagesByChatId,
+  saveMessage,
+  updateChat,
+} from "@/actions/chat";
 import { google } from "@ai-sdk/google";
 import {
   streamText,
@@ -16,6 +22,8 @@ export async function POST(req: Request) {
 
   await saveMessage(id, message);
   console.log("message saved");
+  const chat = await getChatById(id);
+
   const messages = await getMessagesByChatId(id);
   if (!messages) {
     return new Response("No messages found", { status: 404 });
@@ -26,6 +34,17 @@ export async function POST(req: Request) {
       const result = streamText({
         model: google("gemini-2.5-flash"),
         messages: convertToModelMessages(messages),
+        async onFinish(result) {
+          if (!chat?.title) {
+            const title = await generateTitleFromUserMessage({ message });
+            await updateChat(id, { title });
+            writer.write({
+              type: "data-title",
+              data: title,
+              transient: true,
+            });
+          }
+        },
       });
 
       result.consumeStream();
