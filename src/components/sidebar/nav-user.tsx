@@ -17,8 +17,21 @@ import {
   Bell,
 } from "lucide-react";
 import { LogoutButton } from "./logout-button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { FC } from "react";
 
-export const NavUser = () => {
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+interface NavUserProps {
+  user: User;
+}
+
+export const NavUser: FC<NavUserProps> = ({ user }) => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -28,15 +41,14 @@ export const NavUser = () => {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <UserIcon />
-              {/* <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar> */}
-              {/* <div className="grid flex-1 text-left text-sm leading-tight">
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
-              </div> */}
+              </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -48,10 +60,9 @@ export const NavUser = () => {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <UserIcon />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">John Doe</span>
-                  <span className="truncate text-xs">john.doe@example.com</span>
+                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

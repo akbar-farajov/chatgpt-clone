@@ -9,12 +9,14 @@ import { AppSidebar } from "@/components/sidebar/sidebar";
 import { Chat as ChatType } from "@/types/chat";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
+import { User } from "../sidebar/nav-user";
 
 interface ChatProps {
   chatId?: string;
   initialMessages: UIMessage[];
   chats: ChatType[];
   initialTitle?: string | null;
+  user: User;
 }
 
 const Chat: FC<ChatProps> = ({
@@ -22,6 +24,7 @@ const Chat: FC<ChatProps> = ({
   initialMessages,
   chats,
   initialTitle,
+  user,
 }) => {
   const router = useRouter();
   const [title, setTitle] = useState<string | undefined>(
@@ -90,7 +93,12 @@ const Chat: FC<ChatProps> = ({
 
   return (
     <SidebarProvider>
-      <AppSidebar chats={chats} currentChatId={chatId} currentTitle={title} />
+      <AppSidebar
+        chats={chats}
+        currentChatId={chatId}
+        currentTitle={title}
+        user={user}
+      />
       <div className="max-h-screen h-screen flex flex-col w-full">
         <nav className="p-2 border-b flex items-center gap-2">
           <SidebarTrigger />

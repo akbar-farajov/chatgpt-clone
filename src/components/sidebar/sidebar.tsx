@@ -15,17 +15,19 @@ import { Chat } from "@/types/chat";
 import { FC } from "react";
 import Link from "next/link";
 import { NewChatButton } from "./new-chat-button";
-import { NavUser } from "./nav-user";
+import { NavUser, User } from "./nav-user";
 interface AppSidebarProps {
   chats: Chat[];
   currentChatId?: string;
   currentTitle?: string;
+  user: User;
 }
 
 export const AppSidebar: FC<AppSidebarProps> = ({
   chats,
   currentChatId,
   currentTitle,
+  user,
 }) => {
   return (
     <Sidebar>
@@ -63,7 +65,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

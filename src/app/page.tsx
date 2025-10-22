@@ -15,5 +15,16 @@ export default async function Home() {
 
   const chats = (await getChats()) || [];
 
-  return <Chat initialMessages={[]} chats={chats} />;
+  return (
+    <Chat
+      initialMessages={[]}
+      chats={chats}
+      user={{
+        id: user.id,
+        name: user.user_metadata.name,
+        email: user.email || "",
+        avatar: user.user_metadata.avatar_url,
+      }}
+    />
+  );
 }
