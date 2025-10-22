@@ -11,12 +11,12 @@ import {
 import {
   BadgeCheck,
   ChevronsUpDown,
-  LogOutIcon,
   Sparkles,
   UserIcon,
   CreditCard,
   Bell,
 } from "lucide-react";
+import { LogoutButton } from "./logout-button";
 
 export const NavUser = () => {
   return (
@@ -78,10 +78,7 @@ export const NavUser = () => {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon />
-              Log out
-            </DropdownMenuItem>
+            <LogoutButton />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
