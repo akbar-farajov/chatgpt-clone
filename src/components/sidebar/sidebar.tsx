@@ -7,6 +7,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -29,16 +30,14 @@ export const AppSidebar: FC<AppSidebarProps> = ({
 }) => {
   return (
     <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <NewChatButton />
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>{" "}
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <NewChatButton />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarGroupLabel>Chats</SidebarGroupLabel>
           {chats.map((chat) => {
@@ -55,7 +54,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
                     className="justify-between w-full"
                     isActive={currentChatId === chat.id.toString()}
                   >
-                    <span>{displayTitle}</span>
+                    <span className="text-sm truncate">{displayTitle}</span>
                     <Ellipsis className="size-4 opacity-0 group-hover/menu-item:opacity-100 transition-opacity" />
                   </SidebarMenuButton>
                 </Link>

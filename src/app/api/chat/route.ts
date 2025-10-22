@@ -29,12 +29,13 @@ export async function POST(req: Request) {
     return new Response("No messages found", { status: 404 });
   }
   console.log("messages fetched");
+
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const result = streamText({
         model: google("gemini-2.5-flash"),
         messages: convertToModelMessages(messages),
-        async onFinish(result) {
+        async onFinish() {
           if (!chat?.title) {
             const title = await generateTitleFromUserMessage({ message });
             await updateChat(id, { title });
@@ -47,8 +48,6 @@ export async function POST(req: Request) {
         },
       });
 
-      result.consumeStream();
-      console.log("stream consumed");
       writer.merge(
         result.toUIMessageStream({
           async onFinish({ responseMessage }) {
@@ -59,5 +58,7 @@ export async function POST(req: Request) {
     },
   });
   console.log("stream created");
-  return createUIMessageStreamResponse({ stream });
+  return createUIMessageStreamResponse({
+    stream,
+  });
 }

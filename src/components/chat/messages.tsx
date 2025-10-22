@@ -7,7 +7,6 @@ import { Message } from "../ai-elements/message";
 import { MessageContent } from "../ai-elements/message";
 import { Response } from "../ai-elements/response";
 import { cn } from "@/lib/utils";
-import { MessageAvatar } from "../ai-elements/message";
 import { ConversationScrollButton } from "../ai-elements/conversation";
 import { ChatStatus, UIMessage } from "ai";
 import { Loader } from "../ai-elements/loader";
@@ -50,7 +49,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
             </Message>
           ))
         )}
-        {status === "submitted" || (status === "streaming" && <Loader />)}
+        {status === "submitted" && <Loader />}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>
