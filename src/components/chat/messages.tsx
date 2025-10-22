@@ -49,7 +49,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
             </Message>
           ))
         )}
-        {status === "submitted" && <Loader />}
+        {(status === "submitted" || status === "streaming") && <Loader />}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>

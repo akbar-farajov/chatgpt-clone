@@ -1,18 +1,19 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { createChat } from "@/actions/chat";
+import Chat from "@/components/chat";
+import { getChats } from "@/actions/chat";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { startTransition } from "react";
-export default function Home() {
-  const router = useRouter();
-  const handleCreateChat = async () => {
-    startTransition(async () => {
-      const { data } = await createChat();
-      router.push(`/chat/${data?.id}`);
-      router.refresh();
-    });
-  };
 
-  return <Button onClick={handleCreateChat}>Click me</Button>;
+export default async function Home() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const chats = (await getChats()) || [];
+
+  return <Chat initialMessages={[]} chats={chats} />;
 }

@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, startTransition, useEffect, useRef } from "react";
 import { UIMessage, useChat } from "@ai-sdk/react";
 import { Messages } from "@/components/chat/messages";
 import { ChatComposer } from "@/components/chat/chat-composer";
@@ -7,9 +7,11 @@ import { DefaultChatTransport } from "ai";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar/sidebar";
 import { Chat as ChatType } from "@/types/chat";
+import { createChat } from "@/actions/chat";
+import { useRouter } from "next/navigation";
 
 interface ChatProps {
-  chatId: string;
+  chatId?: string;
   initialMessages: UIMessage[];
   chats: ChatType[];
   initialTitle?: string | null;
@@ -21,10 +23,13 @@ const Chat: FC<ChatProps> = ({
   chats,
   initialTitle,
 }) => {
+  const router = useRouter();
   const [title, setTitle] = useState<string | undefined>(
     initialTitle || undefined
   );
   const [input, setInput] = useState("");
+  const hasCheckedPendingMessage = useRef(false);
+
   const { messages, sendMessage, status, stop } = useChat({
     id: chatId,
     messages: initialMessages,
@@ -46,6 +51,43 @@ const Chat: FC<ChatProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (chatId && !hasCheckedPendingMessage.current) {
+      hasCheckedPendingMessage.current = true;
+
+      const pendingMessage = sessionStorage.getItem(
+        `pending-message-${chatId}`
+      );
+      if (pendingMessage) {
+        sessionStorage.removeItem(`pending-message-${chatId}`);
+        sendMessage({ text: pendingMessage });
+      }
+    }
+  }, [chatId, sendMessage]);
+
+  const handleSubmit = async () => {
+    const hasText = Boolean(input.trim());
+    if (!hasText) {
+      return;
+    }
+
+    if (!chatId) {
+      const messageText = input;
+
+      startTransition(async () => {
+        const { data } = await createChat();
+        if (data?.id) {
+          sessionStorage.setItem(`pending-message-${data.id}`, messageText);
+          router.push(`/chat/${data.id}`);
+        }
+      });
+      return;
+    }
+
+    sendMessage({ text: input });
+    setInput("");
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar chats={chats} currentChatId={chatId} currentTitle={title} />
@@ -59,15 +101,7 @@ const Chat: FC<ChatProps> = ({
         <div className="flex flex-col overflow-hidden relative h-full">
           <Messages messages={messages} status={status} />
           <ChatComposer
-            onSubmit={() => {
-              const hasText = Boolean(input.trim());
-              if (!hasText) {
-                return;
-              }
-
-              sendMessage({ text: input });
-              setInput("");
-            }}
+            onSubmit={handleSubmit}
             onStop={stop}
             setInput={setInput}
             input={input}
