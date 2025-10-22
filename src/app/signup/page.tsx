@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { signup } from "@/actions/auth";
+import { signup, googleLogin } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function SignupPage() {
   return (
@@ -22,7 +23,7 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <form>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 mb-4">
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -73,6 +74,34 @@ export default function SignupPage() {
             </p>
           </CardFooter>
         </form>
+        <div className="px-6 pb-6">
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <form action={googleLogin}>
+            <Button
+              type="submit"
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              <Image
+                src="/icons/google.svg"
+                alt="Google"
+                width={20}
+                height={20}
+              />
+              Sign up with Google
+            </Button>
+          </form>
+        </div>
       </Card>
     </div>
   );

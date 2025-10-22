@@ -61,8 +61,10 @@ export async function googleLogin() {
   });
 
   if (error) {
-    return { error: error.message };
+    redirect("/error");
   }
 
-  return { url: data.url };
+  if (data.url) {
+    redirect(data.url);
+  }
 }

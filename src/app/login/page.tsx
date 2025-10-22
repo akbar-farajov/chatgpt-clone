@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { login } from "@/actions/auth";
+import { login, googleLogin } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
+import Image from "next/image";
+
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -20,7 +22,7 @@ export default function LoginPage() {
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <form>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 mb-4">
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -56,6 +58,7 @@ export default function LoginPage() {
             <Button formAction={login} className="w-full" size="lg">
               Sign in
             </Button>
+
             <p className="text-sm text-muted-foreground text-center">
               Don&apos;t have an account?{" "}
               <Link
@@ -67,6 +70,34 @@ export default function LoginPage() {
             </p>
           </CardFooter>
         </form>
+        <div className="px-6 pb-6">
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
+            </div>
+          </div>
+          <form action={googleLogin}>
+            <Button
+              type="submit"
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              <Image
+                src="/icons/google.svg"
+                alt="Google"
+                width={20}
+                height={20}
+              />
+              Sign in with Google
+            </Button>
+          </form>
+        </div>
       </Card>
     </div>
   );
