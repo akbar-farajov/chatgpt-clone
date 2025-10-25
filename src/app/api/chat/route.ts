@@ -18,7 +18,7 @@ import {
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { message, id }: { message: UIMessage; id: number } = await req.json();
+  const { message, id }: { message: UIMessage; id: string } = await req.json();
 
   await saveMessage(id, message);
   console.log("message saved");

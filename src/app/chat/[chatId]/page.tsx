@@ -18,13 +18,13 @@ const ChatPage = async ({
     redirect("/login");
   }
   const { chatId } = await params;
-  const chat = await getChatById(parseInt(chatId));
+  const chat = await getChatById(chatId);
 
   if (!chat) {
     notFound();
   }
 
-  const initialMessages = (await getMessagesByChatId(parseInt(chatId))) || [];
+  const initialMessages = (await getMessagesByChatId(chatId)) || [];
   const chats = (await getChats()) || [];
 
   return (

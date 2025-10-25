@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "generate:types": "npx supabase gen types typescript --local > src/lib/supabase/types.ts",
+    "reset:db": "npx supabase db reset",
+    "push:db": "npx supabase db push"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.23",

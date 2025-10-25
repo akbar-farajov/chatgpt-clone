@@ -43,9 +43,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
           <SidebarGroupLabel>Chats</SidebarGroupLabel>
           {chats.map((chat) => {
             const displayTitle =
-              currentChatId &&
-              chat.id.toString() === currentChatId &&
-              currentTitle
+              currentChatId && chat.id === currentChatId && currentTitle
                 ? currentTitle
                 : chat.title || "New Chat";
             return (
@@ -53,7 +51,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
                 <Link href={`/chat/${chat.id}`} className="w-full">
                   <SidebarMenuButton
                     className="justify-between w-full"
-                    isActive={currentChatId === chat.id.toString()}
+                    isActive={currentChatId === chat.id}
                   >
                     <span className="text-sm truncate">{displayTitle}</span>
                     <Ellipsis className="size-4 opacity-0 group-hover/menu-item:opacity-100 transition-opacity" />

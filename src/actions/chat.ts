@@ -36,7 +36,7 @@ export async function createChat() {
   }
 }
 
-export async function saveMessage(chatId: number, message: UIMessage) {
+export async function saveMessage(chatId: string, message: UIMessage) {
   const supabase = await createClient();
 
   try {
@@ -62,7 +62,7 @@ export async function saveMessage(chatId: number, message: UIMessage) {
 }
 
 export async function getMessagesByChatId(
-  chatId: number
+  chatId: string
 ): Promise<UIMessage[] | null> {
   const supabase = await createClient();
   try {
@@ -101,7 +101,7 @@ export async function getChats() {
   }
 }
 
-export async function getChatById(chatId: number) {
+export async function getChatById(chatId: string) {
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
@@ -137,7 +137,7 @@ export async function generateTitleFromUserMessage({
   return title;
 }
 
-export async function updateChat(chatId: number, { title }: { title: string }) {
+export async function updateChat(chatId: string, { title }: { title: string }) {
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
