@@ -10,6 +10,7 @@ import { Chat as ChatType } from "@/types/chat";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { User } from "../sidebar/nav-user";
+import { PromptInputMessage } from "../ai-elements/prompt-input";
 
 interface ChatProps {
   chatId?: string;
@@ -68,26 +69,29 @@ const Chat: FC<ChatProps> = ({
     }
   }, [chatId, sendMessage]);
 
-  const handleSubmit = async () => {
-    const hasText = Boolean(input.trim());
-    if (!hasText) {
+  const handleSubmit = async (data: PromptInputMessage) => {
+    const hasText = Boolean(data.text?.trim());
+    const hasFiles = (data.files?.length ?? 0) > 0;
+
+    if (!hasText && !hasFiles) {
       return;
     }
 
     if (!chatId) {
-      const messageText = input;
+      const messageText = data.text || "";
 
       startTransition(async () => {
-        const { data } = await createChat();
-        if (data?.id) {
-          sessionStorage.setItem(`pending-message-${data.id}`, messageText);
-          router.push(`/chat/${data.id}`);
+        const { data: chatData } = await createChat();
+        if (chatData?.id) {
+          sessionStorage.setItem(`pending-message-${chatData.id}`, messageText);
+          router.push(`/chat/${chatData.id}`);
         }
       });
       return;
     }
 
-    sendMessage({ text: input });
+    sendMessage({ text: data.text || "", files: data.files || [] });
+    console.log(data.files);
     setInput("");
   };
 

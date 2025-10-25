@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Conversation } from "../ai-elements/conversation";
 import { ConversationContent } from "../ai-elements/conversation";
 import { ConversationEmptyState } from "../ai-elements/conversation";
-import { MessageSquareIcon } from "lucide-react";
+import { MessageSquareIcon, PaperclipIcon } from "lucide-react";
 import { Message } from "../ai-elements/message";
 import { MessageContent } from "../ai-elements/message";
 import { Response } from "../ai-elements/response";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { ConversationScrollButton } from "../ai-elements/conversation";
 import { ChatStatus, UIMessage } from "ai";
 import { Loader } from "../ai-elements/loader";
+import Image from "next/image";
 
 interface MessagesProps {
   messages: UIMessage[];
@@ -42,6 +43,23 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
                         >
                           {part.type === "text" ? part.text : ""}
                         </Response>
+                      );
+                    case "file":
+                      if (part.mediaType.startsWith("image/")) {
+                        return (
+                          <Image
+                            src={part.url}
+                            alt={part.filename || "File"}
+                            width={100}
+                            height={100}
+                          />
+                        );
+                      }
+                      return (
+                        <div>
+                          <PaperclipIcon className="size-4" />
+                          {part.filename || "File"}
+                        </div>
                       );
                   }
                 })}

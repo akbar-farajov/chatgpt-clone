@@ -86,6 +86,7 @@ export type AttachmentsContext = {
   clear: () => void;
   openFileDialog: () => void;
   fileInputRef: RefObject<HTMLInputElement | null>;
+  fileObjectsRef: RefObject<Map<string, File>>;
 };
 
 export type TextInputContext = {
@@ -160,6 +161,7 @@ export function PromptInputProvider({
   >([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const openRef = useRef<() => void>(() => {});
+  const fileObjectsRef = useRef<Map<string, File>>(new Map());
 
   const add = useCallback((files: File[] | FileList) => {
     const incoming = Array.from(files);
@@ -167,13 +169,17 @@ export function PromptInputProvider({
 
     setAttachements((prev) =>
       prev.concat(
-        incoming.map((file) => ({
-          id: nanoid(),
-          type: "file" as const,
-          url: URL.createObjectURL(file),
-          mediaType: file.type,
-          filename: file.name,
-        }))
+        incoming.map((file) => {
+          const id = nanoid();
+          fileObjectsRef.current.set(id, file);
+          return {
+            id,
+            type: "file" as const,
+            url: URL.createObjectURL(file),
+            mediaType: file.type,
+            filename: file.name,
+          };
+        })
       )
     );
   }, []);
@@ -182,6 +188,7 @@ export function PromptInputProvider({
     setAttachements((prev) => {
       const found = prev.find((f) => f.id === id);
       if (found?.url) URL.revokeObjectURL(found.url);
+      fileObjectsRef.current.delete(id);
       return prev.filter((f) => f.id !== id);
     });
   }, []);
@@ -189,6 +196,7 @@ export function PromptInputProvider({
   const clear = useCallback(() => {
     setAttachements((prev) => {
       for (const f of prev) if (f.url) URL.revokeObjectURL(f.url);
+      fileObjectsRef.current.clear();
       return [];
     });
   }, []);
@@ -205,6 +213,7 @@ export function PromptInputProvider({
       clear,
       openFileDialog,
       fileInputRef,
+      fileObjectsRef,
     }),
     [attachements, add, remove, clear, openFileDialog]
   );
@@ -484,6 +493,7 @@ export const PromptInput = ({
   // ----- Local attachments (only used when no provider)
   const [items, setItems] = useState<(FileUIPart & { id: string })[]>([]);
   const files = usingProvider ? controller.attachments.files : items;
+  const localFileObjectsRef = useRef<Map<string, File>>(new Map());
 
   const openFileDialogLocal = useCallback(() => {
     inputRef.current?.click();
@@ -540,8 +550,10 @@ export const PromptInput = ({
         }
         const next: (FileUIPart & { id: string })[] = [];
         for (const file of capped) {
+          const id = nanoid();
+          localFileObjectsRef.current.set(id, file);
           next.push({
-            id: nanoid(),
+            id,
             type: "file",
             url: URL.createObjectURL(file),
             mediaType: file.type,
@@ -566,6 +578,7 @@ export const PromptInput = ({
           if (found?.url) {
             URL.revokeObjectURL(found.url);
           }
+          localFileObjectsRef.current.delete(id);
           return prev.filter((file) => file.id !== id);
         });
 
@@ -578,6 +591,7 @@ export const PromptInput = ({
               URL.revokeObjectURL(file.url);
             }
           }
+          localFileObjectsRef.current.clear();
           return [];
         });
 
@@ -677,6 +691,15 @@ export const PromptInput = ({
     });
   };
 
+  const convertFileToDataUrl = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const ctx = useMemo<AttachmentsContext>(
     () => ({
       files: files.map((item) => ({ ...item, id: item.id })),
@@ -685,6 +708,7 @@ export const PromptInput = ({
       clear,
       openFileDialog,
       fileInputRef: inputRef,
+      fileObjectsRef: localFileObjectsRef,
     }),
     [files, add, remove, clear, openFileDialog]
   );
@@ -706,10 +730,24 @@ export const PromptInput = ({
       form.reset();
     }
 
+    // Get the correct fileObjectsRef based on whether we're using provider
+    const fileObjectsMap = usingProvider
+      ? controller.attachments.fileObjectsRef.current
+      : localFileObjectsRef.current;
+
     // Convert blob URLs to data URLs asynchronously
     Promise.all(
       files.map(async ({ id, ...item }) => {
         if (item.url && item.url.startsWith("blob:")) {
+          // Try to get the original File object first
+          const fileObject = fileObjectsMap?.get(id);
+          if (fileObject) {
+            return {
+              ...item,
+              url: await convertFileToDataUrl(fileObject),
+            };
+          }
+          // Fallback to fetching blob URL if File object is not found
           return {
             ...item,
             url: await convertBlobUrlToDataUrl(item.url),

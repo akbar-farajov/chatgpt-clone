@@ -14,21 +14,18 @@ import {
   createUIMessageStreamResponse,
 } from "ai";
 
-// Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const { message, id }: { message: UIMessage; id: string } = await req.json();
 
   await saveMessage(id, message);
-  console.log("message saved");
   const chat = await getChatById(id);
 
   const messages = await getMessagesByChatId(id);
   if (!messages) {
     return new Response("No messages found", { status: 404 });
   }
-  console.log("messages fetched");
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
@@ -57,7 +54,6 @@ export async function POST(req: Request) {
       );
     },
   });
-  console.log("stream created");
   return createUIMessageStreamResponse({
     stream,
   });
