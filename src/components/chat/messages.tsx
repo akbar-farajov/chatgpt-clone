@@ -6,11 +6,11 @@ import { MessageSquareIcon, PaperclipIcon } from "lucide-react";
 import { Message } from "../ai-elements/message";
 import { MessageContent } from "../ai-elements/message";
 import { Response } from "../ai-elements/response";
-import { cn } from "@/lib/utils";
 import { ConversationScrollButton } from "../ai-elements/conversation";
 import { ChatStatus, UIMessage } from "ai";
 import { Loader } from "../ai-elements/loader";
 import Image from "next/image";
+import { Shimmer } from "../ai-elements/shimmer";
 
 interface MessagesProps {
   messages: UIMessage[];
@@ -35,12 +35,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
                   switch (part.type) {
                     case "text":
                       return (
-                        <Response
-                          className={cn(
-                            message.role === "assistant" ? "pl-1" : "pr-1"
-                          )}
-                          key={`${message.id}-${index}`}
-                        >
+                        <Response key={`${message.id}-${index}`}>
                           {part.type === "text" ? part.text : ""}
                         </Response>
                       );
@@ -56,7 +51,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
                         );
                       }
                       return (
-                        <div>
+                        <div className="flex items-center gap-2">
                           <PaperclipIcon className="size-4" />
                           {part.filename || "File"}
                         </div>
@@ -67,7 +62,10 @@ export const Messages: FC<MessagesProps> = ({ messages, status }) => {
             </Message>
           ))
         )}
-        {(status === "submitted" || status === "streaming") && <Loader />}
+        {status === "submitted" && (
+          <Shimmer duration={1}>Generating your response...</Shimmer>
+        )}
+        {status === "streaming" && <Loader />}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>

@@ -64,7 +64,12 @@ const Chat: FC<ChatProps> = ({
       );
       if (pendingMessage) {
         sessionStorage.removeItem(`pending-message-${chatId}`);
-        sendMessage({ text: pendingMessage });
+        try {
+          const parsedMessage = JSON.parse(pendingMessage);
+          sendMessage(parsedMessage);
+        } catch {
+          sendMessage({ text: pendingMessage });
+        }
       }
     }
   }, [chatId, sendMessage]);
@@ -78,12 +83,14 @@ const Chat: FC<ChatProps> = ({
     }
 
     if (!chatId) {
-      const messageText = data.text || "";
-
       startTransition(async () => {
         const { data: chatData } = await createChat();
         if (chatData?.id) {
-          sessionStorage.setItem(`pending-message-${chatData.id}`, messageText);
+          sessionStorage.setItem(
+            `pending-message-${chatData.id}`,
+            JSON.stringify({ text: data.text || "", files: data.files || [] })
+          );
+          setInput("");
           router.push(`/chat/${chatData.id}`);
         }
       });
@@ -91,7 +98,7 @@ const Chat: FC<ChatProps> = ({
     }
 
     sendMessage({ text: data.text || "", files: data.files || [] });
-    console.log(data.files);
+
     setInput("");
   };
 
