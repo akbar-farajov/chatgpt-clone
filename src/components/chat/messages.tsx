@@ -12,20 +12,23 @@ import { Loader } from "../ai-elements/loader";
 import Image from "next/image";
 import { Shimmer } from "../ai-elements/shimmer";
 
+import { Profile } from "@/lib/types";
+
 interface MessagesProps {
   messages: UIMessage[];
   status: ChatStatus;
+  profile: Profile | null;
 }
 
-export const Messages: FC<MessagesProps> = ({ messages, status }) => {
+export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
   return (
     <Conversation className="relative size-full mb-44 scroll-smooth">
       <ConversationContent className="max-w-3xl mx-auto">
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}
-            title="Start a chat with Akbar"
-            description="Ask me everything about myself — technologies, experience, projects, and more!"
+            title={`How can I help, ${profile?.full_name || "User"}?`}
+            description={`Ask me anything about the documents you upload.`}
           />
         ) : (
           messages.map((message, index) => (

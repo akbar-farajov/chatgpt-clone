@@ -5,8 +5,6 @@ import {
   PromptInputTextarea,
   PromptInputFooter,
   PromptInputSubmit,
-  PromptInputButton,
-  PromptInputSpeechButton,
   PromptInputTools,
   PromptInputActionMenu,
   PromptInputActionMenuContent,
@@ -18,7 +16,6 @@ import {
 } from "../ai-elements/prompt-input";
 
 import { ChatStatus } from "ai";
-import { GlobeIcon } from "lucide-react";
 import { FC, useRef } from "react";
 
 interface ChatComposerProps {
@@ -61,29 +58,6 @@ export const ChatComposer: FC<ChatComposerProps> = ({
               <PromptInputActionAddAttachments />
             </PromptInputActionMenuContent>
           </PromptInputActionMenu>
-          <PromptInputSpeechButton
-            onTranscriptionChange={setInput}
-            textareaRef={textareaRef}
-          />
-          <PromptInputButton>
-            <GlobeIcon size={16} />
-            <span>Search</span>
-          </PromptInputButton>
-          {/* <PromptInputModelSelect onValueChange={setModel} value={model}>
-            <PromptInputModelSelectTrigger>
-              <PromptInputModelSelectValue />
-            </PromptInputModelSelectTrigger>
-            <PromptInputModelSelectContent>
-              {models.map((modelOption) => (
-                <PromptInputModelSelectItem
-                  key={modelOption.id}
-                  value={modelOption.id}
-                >
-                  {modelOption.name}
-                </PromptInputModelSelectItem>
-              ))}
-            </PromptInputModelSelectContent>
-          </PromptInputModelSelect> */}
         </PromptInputTools>
         <PromptInputSubmit
           disabled={!input.trim() && status !== "streaming"}

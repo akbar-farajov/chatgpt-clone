@@ -17,15 +17,11 @@ export async function getProfile() {
   }
 
   try {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", user.id)
       .single();
-
-    if (error) {
-      throw new Error(error.message);
-    }
 
     return { data, error: null };
   } catch (error) {

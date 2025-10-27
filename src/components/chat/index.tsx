@@ -6,18 +6,17 @@ import { ChatComposer } from "@/components/chat/chat-composer";
 import { DefaultChatTransport } from "ai";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar/sidebar";
-import { Chat as ChatType } from "@/types/chat";
+import type { Chat, Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
-import { User } from "../sidebar/nav-user";
 import { PromptInputMessage } from "../ai-elements/prompt-input";
 
 interface ChatProps {
   chatId?: string;
   initialMessages: UIMessage[];
-  chats: ChatType[];
+  chats: Chat[];
   initialTitle?: string | null;
-  user: User;
+  profile: Profile | null;
 }
 
 const Chat: FC<ChatProps> = ({
@@ -25,7 +24,7 @@ const Chat: FC<ChatProps> = ({
   initialMessages,
   chats,
   initialTitle,
-  user,
+  profile,
 }) => {
   const router = useRouter();
   const [title, setTitle] = useState<string | undefined>(
@@ -108,7 +107,7 @@ const Chat: FC<ChatProps> = ({
         chats={chats}
         currentChatId={chatId}
         currentTitle={title}
-        user={user}
+        profile={profile}
       />
       <div className="max-h-screen h-screen flex flex-col w-full">
         <nav className="p-2 border-b flex items-center gap-2">
@@ -118,7 +117,7 @@ const Chat: FC<ChatProps> = ({
           )}
         </nav>
         <div className="flex flex-col overflow-hidden relative h-full">
-          <Messages messages={messages} status={status} />
+          <Messages messages={messages} status={status} profile={profile} />
           <ChatComposer
             onSubmit={handleSubmit}
             onStop={stop}

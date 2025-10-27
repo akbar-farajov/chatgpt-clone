@@ -11,23 +11,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Chat } from "@/types/chat";
+import type { Chat, Profile } from "@/lib/types";
 import { FC } from "react";
 import Link from "next/link";
 import { NewChatButton } from "./new-chat-button";
-import { NavUser, User } from "./nav-user";
+import { NavUser } from "./nav-user";
 interface AppSidebarProps {
   chats: Chat[];
   currentChatId?: string;
   currentTitle?: string;
-  user: User;
+  profile: Profile | null;
 }
 
 export const AppSidebar: FC<AppSidebarProps> = ({
   chats,
   currentChatId,
   currentTitle,
-  user,
+  profile,
 }) => {
   return (
     <Sidebar>
@@ -63,7 +63,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser profile={profile} />
       </SidebarFooter>
     </Sidebar>
   );
