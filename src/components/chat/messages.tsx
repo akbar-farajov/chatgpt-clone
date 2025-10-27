@@ -7,15 +7,23 @@ import { Message } from "../ai-elements/message";
 import { MessageContent } from "../ai-elements/message";
 import { Response } from "../ai-elements/response";
 import { ConversationScrollButton } from "../ai-elements/conversation";
-import { ChatStatus, UIMessage } from "ai";
+import { ChatStatus } from "ai";
 import { Loader } from "../ai-elements/loader";
 import Image from "next/image";
 import { Shimmer } from "../ai-elements/shimmer";
 
 import { Profile } from "@/lib/types";
+import { ChatMessage } from "@/app/api/chat/route";
+import {
+  Tool,
+  ToolContent,
+  ToolHeader,
+  ToolInput,
+  ToolOutput,
+} from "../ai-elements/tool";
 
 interface MessagesProps {
-  messages: UIMessage[];
+  messages: ChatMessage[];
   status: ChatStatus;
   profile: Profile | null;
 }
@@ -41,6 +49,21 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
                         <Response key={`${message.id}-${index}`}>
                           {part.type === "text" ? part.text : ""}
                         </Response>
+                      );
+                    case "tool-getWeather":
+                      return (
+                        <Tool className="">
+                          <ToolHeader type={part.type} state={part.state} />
+                          <ToolContent>
+                            <ToolInput input={part.input} />
+                            {part.state === "output-available" && (
+                              <ToolOutput
+                                errorText={part.errorText}
+                                output={part.output}
+                              />
+                            )}
+                          </ToolContent>
+                        </Tool>
                       );
                     case "file":
                       if (part.mediaType.startsWith("image/")) {

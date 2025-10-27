@@ -4,6 +4,8 @@ import React from "react";
 import { getChatById, getMessagesByChatId, getChats } from "@/actions/chat";
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
+import { ChatMessage } from "@/app/api/chat/route";
+import { getProfile } from "@/actions/profile";
 
 const ChatPage = async ({
   params,
@@ -23,22 +25,20 @@ const ChatPage = async ({
   if (!chat) {
     notFound();
   }
-
+  const { data: profile, error } = await getProfile();
+  if (error) {
+    redirect("/login");
+  }
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   const chats = (await getChats()) || [];
 
   return (
     <Chat
       chatId={chatId}
-      initialMessages={initialMessages}
+      initialMessages={initialMessages as ChatMessage[]}
       chats={chats}
       initialTitle={chat.title}
-      user={{
-        id: user.id,
-        name: user.user_metadata.name,
-        email: user.email || "",
-        avatar: user.user_metadata.avatar_url,
-      }}
+      profile={profile}
     />
   );
 };

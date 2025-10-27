@@ -12,12 +12,24 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
+  tool,
+  InferUITools,
+  UIDataTypes,
+  stepCountIs,
 } from "ai";
+
+import { getTools } from "@/tools";
+
+const tools = getTools();
+
+export type ChatTools = InferUITools<typeof tools>;
+export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
 
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { message, id }: { message: UIMessage; id: string } = await req.json();
+  const { message, id }: { message: ChatMessage; id: string } =
+    await req.json();
 
   await saveMessage(id, message);
   const chat = await getChatById(id);
@@ -32,6 +44,8 @@ export async function POST(req: Request) {
       const result = streamText({
         model: google("gemini-2.5-flash"),
         messages: convertToModelMessages(messages),
+        tools,
+        stopWhen: stepCountIs(10),
         async onFinish() {
           if (!chat?.title) {
             const title = await generateTitleFromUserMessage({ message });

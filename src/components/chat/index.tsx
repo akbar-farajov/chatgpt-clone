@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState, startTransition, useEffect, useRef } from "react";
-import { UIMessage, useChat } from "@ai-sdk/react";
+import { useChat } from "@ai-sdk/react";
 import { Messages } from "@/components/chat/messages";
 import { ChatComposer } from "@/components/chat/chat-composer";
 import { DefaultChatTransport } from "ai";
@@ -10,10 +10,11 @@ import type { Chat, Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../ai-elements/prompt-input";
+import { ChatMessage } from "@/app/api/chat/route";
 
 interface ChatProps {
   chatId?: string;
-  initialMessages: UIMessage[];
+  initialMessages: ChatMessage[];
   chats: Chat[];
   initialTitle?: string | null;
   profile: Profile | null;
@@ -33,7 +34,7 @@ const Chat: FC<ChatProps> = ({
   const [input, setInput] = useState("");
   const hasCheckedPendingMessage = useRef(false);
 
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
     id: chatId,
     messages: initialMessages,
     transport: new DefaultChatTransport({
