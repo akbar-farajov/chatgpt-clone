@@ -12,13 +12,13 @@ import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  tool,
   InferUITools,
   UIDataTypes,
   stepCountIs,
 } from "ai";
 
 import { getTools } from "@/tools";
+import { SYSTEM_PROMPT } from "@/lib/prompts";
 
 const tools = getTools();
 
@@ -43,6 +43,7 @@ export async function POST(req: Request) {
     execute: async ({ writer }) => {
       const result = streamText({
         model: google("gemini-2.5-flash"),
+        system: SYSTEM_PROMPT,
         messages: convertToModelMessages(messages),
         tools,
         stopWhen: stepCountIs(10),

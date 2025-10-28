@@ -46,13 +46,13 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
                   switch (part.type) {
                     case "text":
                       return (
-                        <Response key={`${message.id}-${index}`}>
+                        <Response key={`${message.id}-${index}-text`}>
                           {part.type === "text" ? part.text : ""}
                         </Response>
                       );
                     case "tool-getWeather":
                       return (
-                        <Tool className="">
+                        <Tool key={`${message.id}-${index}-tool-getWeather`}>
                           <ToolHeader type={part.type} state={part.state} />
                           <ToolContent>
                             <ToolInput input={part.input} />
@@ -69,6 +69,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
                       if (part.mediaType.startsWith("image/")) {
                         return (
                           <Image
+                            key={`${message.id}-${index}-image`}
                             src={part.url}
                             alt={part.filename || "File"}
                             width={100}
@@ -77,7 +78,10 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
                         );
                       }
                       return (
-                        <div className="flex items-center gap-2">
+                        <div
+                          key={`${message.id}-${index}-file`}
+                          className="flex items-center gap-2"
+                        >
                           <PaperclipIcon className="size-4" />
                           {part.filename || "File"}
                         </div>
