@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { signup, googleLogin } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+  const router = useRouter();
+  const handleSignup = async (formData: FormData) => {
+    const result = await signup(formData);
+    if (result?.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Account created successfully");
+      router.push("/");
+    }
+  };
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -60,7 +73,7 @@ export default function SignupPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button formAction={signup} className="w-full" size="lg">
+            <Button formAction={handleSignup} className="w-full" size="lg">
               Create account
             </Button>
             <p className="text-sm text-muted-foreground text-center">
