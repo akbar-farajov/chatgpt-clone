@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Folder, Forward, MoreHorizontal, Trash2 } from "lucide-react";
+import { Folder, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Chat } from "@/lib/types";
 import { FC, useTransition, useState } from "react";
