@@ -19,6 +19,7 @@ import {
 
 import { getTools } from "@/tools";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
+import { generateUUID } from "@/lib/utils";
 
 const tools = getTools();
 
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
         })
       );
     },
+    generateId: generateUUID,
   });
   return createUIMessageStreamResponse({
     stream,

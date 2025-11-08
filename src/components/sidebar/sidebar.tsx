@@ -1,3 +1,4 @@
+"use client";
 import { Ellipsis } from "lucide-react";
 
 import {
@@ -29,6 +30,10 @@ export const AppSidebar: FC<AppSidebarProps> = ({
   currentTitle,
   profile,
 }) => {
+
+
+  console.log(currentChatId);
+
   return (
     <Sidebar>
       <SidebarHeader>

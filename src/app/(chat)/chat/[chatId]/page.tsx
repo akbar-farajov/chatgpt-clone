@@ -2,11 +2,11 @@ import Chat from "@/components/chat";
 
 import React, { FC } from "react";
 import { getChatById, getMessagesByChatId, getChats } from "@/actions/chat";
-import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
 import { ChatMessage } from "@/app/api/chat/route";
 import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
+
 
 interface Props {
   params: Promise<{ chatId: string }>;
@@ -30,13 +30,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const ChatPage: FC<Props> = async ({ params }) => {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    redirect("/login");
-  }
   const { chatId } = await params;
   const chat = await getChatById(chatId);
 
@@ -48,17 +41,15 @@ const ChatPage: FC<Props> = async ({ params }) => {
   if (error) {
     redirect("/login");
   }
-  const initialMessages = (await getMessagesByChatId(chatId)) || [];
-  const chats = (await getChats()) || [];
 
+  const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
-    <Chat
-      chatId={chatId}
-      initialMessages={initialMessages as ChatMessage[]}
-      chats={chats}
-      initialTitle={chat.title}
-      profile={profile}
-    />
+        <Chat
+          chatId={chatId}
+          initialMessages={initialMessages as ChatMessage[]}
+          initialTitle={chat.title}
+          profile={profile}
+        />
   );
 };
 

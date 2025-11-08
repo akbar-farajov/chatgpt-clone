@@ -1,12 +1,11 @@
 "use client";
-import { FC, useState, startTransition, useEffect, useRef } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Messages } from "@/components/chat/messages";
 import { ChatComposer } from "@/components/chat/chat-composer";
 import { DefaultChatTransport } from "ai";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar/sidebar";
-import type { Chat, Profile } from "@/lib/types";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../ai-elements/prompt-input";
@@ -15,27 +14,29 @@ import { ChatMessage } from "@/app/api/chat/route";
 interface ChatProps {
   chatId?: string;
   initialMessages: ChatMessage[];
-  chats: Chat[];
   initialTitle?: string | null;
   profile: Profile | null;
 }
 
 const Chat: FC<ChatProps> = ({
-  chatId,
+  chatId: initialChatId,
   initialMessages,
-  chats,
   initialTitle,
   profile,
 }) => {
   const router = useRouter();
+  const [currentChatId, setCurrentChatId] = useState<string | undefined>(
+    initialChatId
+  );
   const [title, setTitle] = useState<string | undefined>(
     initialTitle || undefined
   );
   const [input, setInput] = useState("");
   const hasCheckedPendingMessage = useRef(false);
+  const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
   const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
-    id: chatId,
+    id: currentChatId,
     messages: initialMessages,
     transport: new DefaultChatTransport({
       prepareSendMessagesRequest(request) {
@@ -53,26 +54,23 @@ const Chat: FC<ChatProps> = ({
         setTitle(data as string);
       }
     },
+    onFinish() {
+      if (currentChatId && !initialChatId) {
+        
+        router.push(`/chat/${currentChatId}`);
+      }
+    },
   });
 
+ 
   useEffect(() => {
-    if (chatId && !hasCheckedPendingMessage.current) {
-      hasCheckedPendingMessage.current = true;
-
-      const pendingMessage = sessionStorage.getItem(
-        `pending-message-${chatId}`
-      );
-      if (pendingMessage) {
-        sessionStorage.removeItem(`pending-message-${chatId}`);
-        try {
-          const parsedMessage = JSON.parse(pendingMessage);
-          sendMessage(parsedMessage);
-        } catch {
-          sendMessage({ text: pendingMessage });
-        }
-      }
+    if (currentChatId && pendingMessageRef.current) {
+      const message = pendingMessageRef.current;
+      pendingMessageRef.current = null;
+      sendMessage({ text: message.text || "", files: message.files || [] });
+      setInput("");
     }
-  }, [chatId, sendMessage]);
+  }, [currentChatId, sendMessage]);
 
   const handleSubmit = async (data: PromptInputMessage) => {
     const hasText = Boolean(data.text?.trim());
@@ -82,18 +80,14 @@ const Chat: FC<ChatProps> = ({
       return;
     }
 
-    if (!chatId) {
-      startTransition(async () => {
-        const { data: chatData } = await createChat();
-        if (chatData?.id) {
-          sessionStorage.setItem(
-            `pending-message-${chatData.id}`,
-            JSON.stringify({ text: data.text || "", files: data.files || [] })
-          );
-          setInput("");
-          router.push(`/chat/${chatData.id}`);
-        }
-      });
+    if (!currentChatId) {
+      // Store pending message and create chat
+      pendingMessageRef.current = data;
+      const result = await createChat();
+      if (result.data?.id) {
+        setCurrentChatId(result.data.id);
+        // useEffect will send the message once currentChatId is set
+      }
       return;
     }
 
@@ -103,32 +97,22 @@ const Chat: FC<ChatProps> = ({
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar
-        chats={chats}
-        currentChatId={chatId}
-        currentTitle={title}
-        profile={profile}
-      />
-      <div className="max-h-screen h-screen flex flex-col w-full">
-        <nav className="p-2 border-b flex items-center gap-2">
-          <SidebarTrigger />
-          {title && (
-            <div className="text-sm text-muted-foreground">{title}</div>
-          )}
-        </nav>
-        <div className="flex flex-col overflow-hidden relative h-full">
-          <Messages messages={messages} status={status} profile={profile} />
-          <ChatComposer
-            onSubmit={handleSubmit}
-            onStop={stop}
-            setInput={setInput}
-            input={input}
-            status={status}
-          />
-        </div>
+    <div className="max-h-screen h-screen flex flex-col w-full">
+      <nav className="p-2 border-b flex items-center gap-2">
+        <SidebarTrigger />
+        {title && <div className="text-sm text-muted-foreground">{title}</div>}
+      </nav>
+      <div className="flex flex-col overflow-hidden relative h-full">
+        <Messages messages={messages} status={status} profile={profile} />
+        <ChatComposer
+          onSubmit={handleSubmit}
+          onStop={stop}
+          setInput={setInput}
+          input={input}
+          status={status}
+        />
       </div>
-    </SidebarProvider>
+    </div>
   );
 };
 
