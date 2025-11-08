@@ -4,7 +4,6 @@ import { useChat } from "@ai-sdk/react";
 import { Messages } from "@/components/chat/messages";
 import { ChatComposer } from "@/components/chat/chat-composer";
 import { DefaultChatTransport } from "ai";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
@@ -32,7 +31,6 @@ const Chat: FC<ChatProps> = ({
     initialTitle || undefined
   );
   const [input, setInput] = useState("");
-  const hasCheckedPendingMessage = useRef(false);
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
   const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
@@ -56,13 +54,11 @@ const Chat: FC<ChatProps> = ({
     },
     onFinish() {
       if (currentChatId && !initialChatId) {
-        
         router.push(`/chat/${currentChatId}`);
       }
     },
   });
 
- 
   useEffect(() => {
     if (currentChatId && pendingMessageRef.current) {
       const message = pendingMessageRef.current;
@@ -81,12 +77,10 @@ const Chat: FC<ChatProps> = ({
     }
 
     if (!currentChatId) {
-      // Store pending message and create chat
       pendingMessageRef.current = data;
       const result = await createChat();
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
-        // useEffect will send the message once currentChatId is set
       }
       return;
     }
@@ -98,11 +92,7 @@ const Chat: FC<ChatProps> = ({
 
   return (
     <div className="max-h-screen h-screen flex flex-col w-full">
-      <nav className="p-2 border-b flex items-center gap-2">
-        <SidebarTrigger />
-        {title && <div className="text-sm text-muted-foreground">{title}</div>}
-      </nav>
-      <div className="flex flex-col overflow-hidden relative h-full">
+      <div className="flex flex-col h-full">
         <Messages messages={messages} status={status} profile={profile} />
         <ChatComposer
           onSubmit={handleSubmit}

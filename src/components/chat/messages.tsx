@@ -30,7 +30,7 @@ interface MessagesProps {
 
 export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
   return (
-    <Conversation className="relative size-full mb-44 scroll-smooth">
+    <Conversation className="relative size-full flex-1 scroll-smooth">
       <ConversationContent className="max-w-3xl mx-auto">
         {messages.length === 0 ? (
           <ConversationEmptyState

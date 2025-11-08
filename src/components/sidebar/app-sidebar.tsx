@@ -11,12 +11,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import type { Chat, Profile } from "@/lib/types";
-import { FC } from "react";
+import { FC, useState } from "react";
 import Link from "next/link";
 import { NewChatButton } from "./new-chat-button";
 import { NavUser } from "./nav-user";
+import Image from "next/image";
+import { SidebarTrigger } from "../ui/sidebar";
+import { AppSidebarHeader } from "./sidebar-header";
 interface AppSidebarProps {
   chats: Chat[];
   currentChatId?: string;
@@ -30,20 +34,18 @@ export const AppSidebar: FC<AppSidebarProps> = ({
   currentTitle,
   profile,
 }) => {
-
-
-  console.log(currentChatId);
-
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <NewChatButton />
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>{" "}
+    <Sidebar collapsible="icon">
+      <AppSidebarHeader />
+
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <NewChatButton />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroup>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarGroupLabel>Chats</SidebarGroupLabel>
           {chats.map((chat) => {
@@ -70,6 +72,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
       <SidebarFooter>
         <NavUser profile={profile} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 };

@@ -1,13 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import { getChats } from "@/actions/chat";
 import { getProfile } from "@/actions/profile";
-import { AppSidebar } from "@/components/sidebar/sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 
-const layout: FC<{ children: React.ReactNode, params: Promise<{ chatId: string }> }> = async ({ children, params }) => {
+const layout: FC<{
+  children: React.ReactNode;
+  params: Promise<{ chatId: string }>;
+}> = async ({ children, params }) => {
   const { chatId } = await params;
-  
+
   const { data: profile } = await getProfile();
   const chats = (await getChats()) || [];
 
@@ -23,9 +26,7 @@ const layout: FC<{ children: React.ReactNode, params: Promise<{ chatId: string }
         currentTitle={undefined}
         profile={profile}
       />
-      <SidebarInset>
-        {children}
-      </SidebarInset>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );
 };

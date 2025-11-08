@@ -1,7 +1,7 @@
 import Chat from "@/components/chat";
 import { getChats } from "@/actions/chat";
 import { getProfile } from "@/actions/profile";
-import { AppSidebar } from "@/components/sidebar/sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 

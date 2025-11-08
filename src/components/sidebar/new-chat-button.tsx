@@ -8,8 +8,8 @@ export const NewChatButton = () => {
     <Link href="/">
       <SidebarMenuButton>
         <SquarePenIcon />
-        <span>New Chat</span>{" "}
-      </SidebarMenuButton>{" "}
+        <span>New Chat</span>
+      </SidebarMenuButton>
     </Link>
   );
 };
