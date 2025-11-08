@@ -28,7 +28,6 @@ const Loading = () => {
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
                 </div>
               </div>
             </div>
@@ -50,20 +49,16 @@ const Loading = () => {
                 </div>
                 <div className="space-y-3">
                   <Skeleton className="h-4 w-full animate-pulse" />
-                  <Skeleton className="h-4 w-2/3 animate-pulse" />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t p-4">
-          <div className="max-w-3xl mx-auto space-y-3">
-            <Skeleton className="h-24 w-full rounded-2xl" />
-            <div className="flex justify-between items-center">
-              <Skeleton className="h-8 w-24" />
-              <Skeleton className="h-10 w-28 rounded-full" />
-            </div>
+        <div className="mt-4 w-full max-w-3xl mx-auto p-2 mb-4 md:mb-8 shadow-xs bg-background rounded-lg">
+          <div className="flex justify-between items-end h-28 bg-muted  rounded-sm p-4 space-y-2">
+            <Skeleton className="size-8 bg-primary/10" />
+            <Skeleton className="size-10 rounded-full bg-primary/10" />
           </div>
         </div>
       </div>
