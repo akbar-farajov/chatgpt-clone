@@ -1,5 +1,11 @@
 "use client";
-import { Ellipsis } from "lucide-react";
+import {
+  Ellipsis,
+  Folder,
+  Forward,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -9,6 +15,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
@@ -21,6 +28,14 @@ import { NavUser } from "./nav-user";
 import Image from "next/image";
 import { SidebarTrigger } from "../ui/sidebar";
 import { AppSidebarHeader } from "./sidebar-header";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { NavChats } from "./nav-chats";
 interface AppSidebarProps {
   chats: Chat[];
   currentChatId?: string;
@@ -46,28 +61,11 @@ export const AppSidebar: FC<AppSidebarProps> = ({
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel>Chats</SidebarGroupLabel>
-          {chats.map((chat) => {
-            const displayTitle =
-              currentChatId && chat.id === currentChatId && currentTitle
-                ? currentTitle
-                : chat.title || "New Chat";
-            return (
-              <SidebarMenuItem key={chat.id}>
-                <Link href={`/chat/${chat.id}`} className="w-full">
-                  <SidebarMenuButton
-                    className="justify-between w-full"
-                    isActive={currentChatId === chat.id}
-                  >
-                    <span className="text-sm truncate">{displayTitle}</span>
-                    <Ellipsis className="size-4 opacity-0 group-hover/menu-item:opacity-100 transition-opacity" />
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            );
-          })}
-        </SidebarGroup>
+        <NavChats
+          chats={chats}
+          currentChatId={currentChatId}
+          currentTitle={currentTitle}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser profile={profile} />

@@ -154,3 +154,19 @@ export async function updateChat(chatId: string, { title }: { title: string }) {
     return null;
   }
 }
+
+export async function deleteChat(chatId: string) {
+  const supabase = await createClient();
+  try {
+    const { data } = await supabase
+      .from("chats")
+      .delete()
+      .eq("id", chatId)
+      .throwOnError();
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

@@ -9,7 +9,7 @@ export const AppSidebarHeader = () => {
         href="/"
         className="flex items-center gap-2 hover:opacity-80 transition-opacity group-data-[collapsible=icon]:hidden"
       >
-        <Image src="/icons/logo.svg" alt="Logo" width={32} height={32} />
+        <Image src="/icons/logo.svg" alt="Logo" width={24} height={24} />
       </Link>
       <SidebarTrigger className="p-4" />
     </SidebarHeader>
