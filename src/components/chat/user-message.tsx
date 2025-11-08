@@ -8,6 +8,7 @@ import { Response } from "../ai-elements/response";
 import { Action } from "../ai-elements/actions";
 import { Actions } from "../ai-elements/actions";
 import { ChatMessage } from "@/app/api/chat/route";
+import Image from "next/image";
 
 interface UserMessageProps {
   message: ChatMessage;
@@ -39,18 +40,39 @@ export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
 
   return (
     <Message from={message.role} className="group flex flex-col gap-2">
-      <MessageContent variant="flat">
-        {message.parts.map((part, partIndex) => {
-          if (part.type === "text") {
+      {message.parts.map((part, partIndex) => {
+        switch (part.type) {
+          case "text":
             return (
-              <Response key={`${message.id}-${partIndex}-text`}>
-                {part.text}
-              </Response>
+              <MessageContent
+                variant="flat"
+                key={`${message.id}-${partIndex}-text`}
+              >
+                <Response>{part.text}</Response>
+              </MessageContent>
             );
-          }
-          return null;
-        })}
-      </MessageContent>
+          case "file":
+            if (part.mediaType.startsWith("image/")) {
+              return (
+                <MessageContent
+                  variant="flat"
+                  key={`${message.id}-${partIndex}-image`}
+                >
+                  <Image
+                    key={`${message.id}-${partIndex}-image`}
+                    src={part.url}
+                    alt={part.filename || "File"}
+                    width={100}
+                    height={100}
+                  />
+                </MessageContent>
+              );
+            }
+            return (
+              <div key={`${message.id}-${partIndex}-file`}>{part.filename}</div>
+            );
+        }
+      })}
       <Actions className="flex justify-end w-full opacity-0 group-hover:opacity-100 transition-opacity">
         <Action
           label="Copy"

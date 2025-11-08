@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Folder, MoreHorizontal, Trash2 } from "lucide-react";
+import { Folder, MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Chat } from "@/lib/types";
 import { FC, useTransition, useState } from "react";
@@ -102,7 +102,7 @@ export const NavChats: FC<NavChatsProps> = ({
                     setRenameChat(displayTitle);
                   }}
                 >
-                  <Folder className="text-muted-foreground" />
+                  <PencilIcon className="text-muted-foreground" />
                   <span>Rename</span>
                 </DropdownMenuItem>
 
