@@ -55,6 +55,7 @@ const Chat: FC<ChatProps> = ({
     onFinish() {
       if (currentChatId && !initialChatId) {
         router.push(`/chat/${currentChatId}`);
+        router.refresh();
       }
     },
   });
