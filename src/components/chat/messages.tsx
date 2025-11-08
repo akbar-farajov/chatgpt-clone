@@ -2,25 +2,15 @@ import { FC } from "react";
 import { Conversation } from "../ai-elements/conversation";
 import { ConversationContent } from "../ai-elements/conversation";
 import { ConversationEmptyState } from "../ai-elements/conversation";
-import { MessageSquareIcon, PaperclipIcon } from "lucide-react";
-import { Message } from "../ai-elements/message";
-import { MessageContent } from "../ai-elements/message";
-import { Response } from "../ai-elements/response";
+import { MessageSquareIcon } from "lucide-react";
 import { ConversationScrollButton } from "../ai-elements/conversation";
 import { ChatStatus } from "ai";
 import { Loader } from "../ai-elements/loader";
-import Image from "next/image";
 import { Shimmer } from "../ai-elements/shimmer";
-
 import { Profile } from "@/lib/types";
 import { ChatMessage } from "@/app/api/chat/route";
-import {
-  Tool,
-  ToolContent,
-  ToolHeader,
-  ToolInput,
-  ToolOutput,
-} from "../ai-elements/tool";
+import { AIMessage } from "./ai-message";
+import { UserMessage } from "./user-message";
 
 interface MessagesProps {
   messages: ChatMessage[];
@@ -39,58 +29,16 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
             description={`Ask me anything about the documents you upload.`}
           />
         ) : (
-          messages.map((message, index) => (
-            <Message key={message.id} from={message.role}>
-              <MessageContent variant="flat">
-                {message.parts.map((part) => {
-                  switch (part.type) {
-                    case "text":
-                      return (
-                        <Response key={`${message.id}-${index}-text`}>
-                          {part.type === "text" ? part.text : ""}
-                        </Response>
-                      );
-                    case "tool-getWeather":
-                      return (
-                        <Tool key={`${message.id}-${index}-tool-getWeather`}>
-                          <ToolHeader type={part.type} state={part.state} />
-                          <ToolContent>
-                            <ToolInput input={part.input} />
-                            {part.state === "output-available" && (
-                              <ToolOutput
-                                errorText={part.errorText}
-                                output={part.output}
-                              />
-                            )}
-                          </ToolContent>
-                        </Tool>
-                      );
-                    case "file":
-                      if (part.mediaType.startsWith("image/")) {
-                        return (
-                          <Image
-                            key={`${message.id}-${index}-image`}
-                            src={part.url}
-                            alt={part.filename || "File"}
-                            width={100}
-                            height={100}
-                          />
-                        );
-                      }
-                      return (
-                        <div
-                          key={`${message.id}-${index}-file`}
-                          className="flex items-center gap-2"
-                        >
-                          <PaperclipIcon className="size-4" />
-                          {part.filename || "File"}
-                        </div>
-                      );
-                  }
-                })}
-              </MessageContent>
-            </Message>
-          ))
+          messages.map((message, index) => {
+            if (message.role === "user") {
+              return (
+                <UserMessage key={message.id} message={message} index={index} />
+              );
+            }
+            return (
+              <AIMessage key={message.id} message={message} index={index} />
+            );
+          })
         )}
         {status === "submitted" && (
           <Shimmer duration={1}>Generating your response...</Shimmer>
