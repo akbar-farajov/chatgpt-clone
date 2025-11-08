@@ -1,3 +1,5 @@
+"use client";
+
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import {
   DropdownMenu,
@@ -6,26 +8,42 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import {
   BadgeCheck,
   ChevronsUpDown,
   Sparkles,
-  UserIcon,
   CreditCard,
   Bell,
+  Palette,
+  Sun,
+  Moon,
+  Monitor,
+  Check,
 } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FC } from "react";
 import type { Profile } from "@/lib/types";
+import { useTheme } from "next-themes";
 
 interface NavUserProps {
   profile: Profile | null;
 }
 
 export const NavUser: FC<NavUserProps> = ({ profile }) => {
+  const { theme, setTheme } = useTheme();
+
+  const themeOptions = [
+    { value: "light", label: "Light", icon: Sun },
+    { value: "dark", label: "Dark", icon: Moon },
+    { value: "system", label: "System", icon: Monitor },
+  ];
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -90,6 +108,28 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
                 <Bell />
                 Notifications
               </DropdownMenuItem>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <Palette />
+                  Theme
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {themeOptions.map((option) => {
+                    const Icon = option.icon;
+                    const isActive = theme === option.value;
+                    return (
+                      <DropdownMenuItem
+                        key={option.value}
+                        onClick={() => setTheme(option.value)}
+                      >
+                        <Icon className="mr-2 h-4 w-4" />
+                        <span className="flex-1">{option.label}</span>
+                        {isActive && <Check className="h-4 w-4" />}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <LogoutButton />
