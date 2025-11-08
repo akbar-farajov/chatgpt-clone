@@ -19,6 +19,13 @@ interface MessagesProps {
 }
 
 export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
+  const isLastMessageStreaming = (index: number) => {
+    return (
+      index === messages.length - 1 &&
+      (status === "streaming" || status === "submitted")
+    );
+  };
+
   return (
     <Conversation className="relative size-full flex-1 scroll-smooth">
       <ConversationContent className="max-w-3xl mx-auto">
@@ -36,7 +43,12 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
               );
             }
             return (
-              <AIMessage key={message.id} message={message} index={index} />
+              <AIMessage
+                key={message.id}
+                message={message}
+                index={index}
+                isStreaming={isLastMessageStreaming(index)}
+              />
             );
           })
         )}

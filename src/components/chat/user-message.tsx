@@ -41,7 +41,7 @@ export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
     <Message
       key={message.id}
       from={message.role}
-      className="flex flex-col gap-2"
+      className="group flex flex-col gap-2"
     >
       <MessageContent variant="flat">
         {message.parts.map((part) => {
@@ -55,7 +55,7 @@ export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
           return null;
         })}
       </MessageContent>
-      <Actions>
+      <Actions className="flex justify-end w-full opacity-0 group-hover:opacity-100 transition-opacity">
         <Action
           label="Copy"
           tooltip="Copy message"

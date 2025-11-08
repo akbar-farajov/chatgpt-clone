@@ -25,9 +25,14 @@ import { ChatMessage } from "@/app/api/chat/route";
 interface AIMessageProps {
   message: ChatMessage;
   index: number;
+  isStreaming?: boolean;
 }
 
-export const AIMessage: FC<AIMessageProps> = ({ message, index }) => {
+export const AIMessage: FC<AIMessageProps> = ({
+  message,
+  index,
+  isStreaming = false,
+}) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopy = async (text: string, messageId: string) => {
@@ -40,8 +45,8 @@ export const AIMessage: FC<AIMessageProps> = ({ message, index }) => {
     }
   };
 
-  const handleEdit = () => {
-    console.log("Edit functionality not yet implemented");
+  const handleRegenerate = () => {
+    console.log("Regenerate functionality not yet implemented");
   };
 
   const textContent = message.parts
@@ -52,7 +57,7 @@ export const AIMessage: FC<AIMessageProps> = ({ message, index }) => {
     <Message
       key={message.id}
       from={message.role}
-      className="flex flex-col gap-2"
+      className="group flex flex-col gap-2"
     >
       <MessageContent variant="flat">
         {message.parts.map((part) => {
@@ -102,28 +107,30 @@ export const AIMessage: FC<AIMessageProps> = ({ message, index }) => {
           }
         })}
       </MessageContent>
-      <Actions className="flex justify-start w-full">
-        <Action
-          label="Copy"
-          tooltip="Copy message"
-          variant="ghost"
-          onClick={() => handleCopy(textContent, message.id)}
-        >
-          {copiedId === message.id ? (
-            <CheckIcon className="size-4" />
-          ) : (
-            <CopyIcon className="size-4" />
-          )}
-        </Action>
-        <Action
-          label="Regenerate"
-          tooltip="Regenerate message"
-          variant="ghost"
-          onClick={handleEdit}
-        >
-          <RefreshCcwIcon className="size-4" />
-        </Action>
-      </Actions>
+      {!isStreaming && (
+        <Actions className="flex justify-start w-full opacity-0 group-hover:opacity-100 transition-opacity">
+          <Action
+            label="Copy"
+            tooltip="Copy message"
+            variant="ghost"
+            onClick={() => handleCopy(textContent, message.id)}
+          >
+            {copiedId === message.id ? (
+              <CheckIcon className="size-4" />
+            ) : (
+              <CopyIcon className="size-4" />
+            )}
+          </Action>
+          <Action
+            label="Regenerate"
+            tooltip="Regenerate message"
+            variant="ghost"
+            onClick={handleRegenerate}
+          >
+            <RefreshCcwIcon className="size-4" />
+          </Action>
+        </Actions>
+      )}
     </Message>
   );
 };
