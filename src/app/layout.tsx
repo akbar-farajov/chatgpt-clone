@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI Chat",
-  description: "AI Chat with your documents",
+  title: "Lunex AI",
+  description: "Lunex AI is a chatbot that can help you with your documents",
 };
 
 export default async function RootLayout({

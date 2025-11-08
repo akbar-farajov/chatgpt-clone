@@ -9,7 +9,6 @@ import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../ai-elements/prompt-input";
 import { ChatMessage } from "@/app/api/chat/route";
-import { SidebarTrigger } from "../ui/sidebar";
 
 interface ChatProps {
   chatId?: string;
@@ -92,19 +91,16 @@ const Chat: FC<ChatProps> = ({
   };
 
   return (
-    <div className="max-h-screen h-screen flex flex-col w-full">
-      <div className="flex flex-col h-full">
-        <SidebarTrigger className="m-2 md:hidden" />
-        <Messages messages={messages} status={status} profile={profile} />
-        <ChatComposer
-          onSubmit={handleSubmit}
-          onStop={stop}
-          setInput={setInput}
-          input={input}
-          status={status}
-        />
-      </div>
-    </div>
+    <>
+      <Messages messages={messages} status={status} profile={profile} />
+      <ChatComposer
+        onSubmit={handleSubmit}
+        onStop={stop}
+        setInput={setInput}
+        input={input}
+        status={status}
+      />
+    </>
   );
 };
 
