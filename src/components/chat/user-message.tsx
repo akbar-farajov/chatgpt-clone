@@ -38,16 +38,12 @@ export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
     .join("\n");
 
   return (
-    <Message
-      key={message.id}
-      from={message.role}
-      className="group flex flex-col gap-2"
-    >
+    <Message from={message.role} className="group flex flex-col gap-2">
       <MessageContent variant="flat">
-        {message.parts.map((part) => {
+        {message.parts.map((part, partIndex) => {
           if (part.type === "text") {
             return (
-              <Response key={`${message.id}-${index}-text`}>
+              <Response key={`${message.id}-${partIndex}-text`}>
                 {part.text}
               </Response>
             );

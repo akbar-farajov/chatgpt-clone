@@ -37,14 +37,13 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
           />
         ) : (
           messages.map((message, index) => {
+            const key = `${message.role}-${message.id || index}-${index}`;
             if (message.role === "user") {
-              return (
-                <UserMessage key={message.id} message={message} index={index} />
-              );
+              return <UserMessage key={key} message={message} index={index} />;
             }
             return (
               <AIMessage
-                key={message.id}
+                key={key}
                 message={message}
                 index={index}
                 isStreaming={isLastMessageStreaming(index)}

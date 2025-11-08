@@ -54,23 +54,19 @@ export const AIMessage: FC<AIMessageProps> = ({
     .join("\n");
 
   return (
-    <Message
-      key={message.id}
-      from={message.role}
-      className="group flex flex-col gap-2"
-    >
+    <Message from={message.role} className="group flex flex-col gap-2">
       <MessageContent variant="flat">
-        {message.parts.map((part) => {
+        {message.parts.map((part, partIndex) => {
           switch (part.type) {
             case "text":
               return (
-                <Response key={`${message.id}-${index}-text`}>
+                <Response key={`${message.id}-${partIndex}-text`}>
                   {part.text}
                 </Response>
               );
             case "tool-getWeather":
               return (
-                <Tool key={`${message.id}-${index}-tool-getWeather`}>
+                <Tool key={`${message.id}-${partIndex}-tool-getWeather`}>
                   <ToolHeader type={part.type} state={part.state} />
                   <ToolContent>
                     <ToolInput input={part.input} />
@@ -87,7 +83,7 @@ export const AIMessage: FC<AIMessageProps> = ({
               if (part.mediaType.startsWith("image/")) {
                 return (
                   <Image
-                    key={`${message.id}-${index}-image`}
+                    key={`${message.id}-${partIndex}-image`}
                     src={part.url}
                     alt={part.filename || "File"}
                     width={100}
@@ -97,7 +93,7 @@ export const AIMessage: FC<AIMessageProps> = ({
               }
               return (
                 <div
-                  key={`${message.id}-${index}-file`}
+                  key={`${message.id}-${partIndex}-file`}
                   className="flex items-center gap-2"
                 >
                   <PaperclipIcon className="size-4" />
