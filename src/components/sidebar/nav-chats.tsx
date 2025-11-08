@@ -61,7 +61,7 @@ export const NavChats: FC<NavChatsProps> = ({
               <Input
                 className="p-2"
                 type="text"
-                value={displayTitle || ""}
+                value={renameChat || ""}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setRenameChat(e.target.value)
                 }
