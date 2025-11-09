@@ -54,7 +54,10 @@ export const AIMessage: FC<AIMessageProps> = ({
     .join("\n");
 
   return (
-    <Message from={message.role} className="group flex flex-col gap-2">
+    <Message
+      from={message.role}
+      className="group flex flex-col gap-2 items-start"
+    >
       <MessageContent variant="flat">
         {message.parts.map((part, partIndex) => {
           switch (part.type) {
