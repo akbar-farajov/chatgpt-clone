@@ -17,12 +17,14 @@ interface ChatDeleteModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   chatId: string;
+  currentChatId?: string;
 }
 
 export const ChatDeleteModal: FC<ChatDeleteModalProps> = ({
   open,
   onOpenChange,
   chatId,
+  currentChatId,
 }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -30,7 +32,12 @@ export const ChatDeleteModal: FC<ChatDeleteModalProps> = ({
   const handleDeleteChat = async () => {
     startTransition(async () => {
       await deleteChat(chatId);
-      router.push("/");
+      onOpenChange(false);
+      if (chatId === currentChatId) {
+        router.push("/");
+      } else {
+        router.refresh();
+      }
     });
   };
 

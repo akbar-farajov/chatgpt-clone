@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Folder, MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
+import { MoreHorizontal, PencilIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Chat } from "@/lib/types";
 import { FC, useTransition, useState } from "react";
@@ -32,7 +32,7 @@ export const NavChats: FC<NavChatsProps> = ({
   currentChatId,
   currentTitle,
 }) => {
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [renameChatId, setRenameChatId] = useState<string | null>(null);
   const [renameChat, setRenameChat] = useState<string>("");
   const router = useRouter();
@@ -107,20 +107,21 @@ export const NavChats: FC<NavChatsProps> = ({
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => setDeleteModalOpen(true)}>
+                <DropdownMenuItem onSelect={() => setDeleteChatId(chat.id)}>
                   <Trash2 className="text-destructive" />
                   <span className="text-destructive">Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <ChatDeleteModal
-              open={deleteModalOpen}
-              onOpenChange={setDeleteModalOpen}
-              chatId={chat.id}
-            />
           </SidebarMenuItem>
         );
       })}
+      <ChatDeleteModal
+        open={deleteChatId !== null}
+        onOpenChange={(open) => !open && setDeleteChatId(null)}
+        chatId={deleteChatId || ""}
+        currentChatId={currentChatId}
+      />
     </SidebarGroup>
   );
 };
