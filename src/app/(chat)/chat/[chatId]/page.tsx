@@ -1,4 +1,4 @@
-import Chat from "@/components/chat";
+import Chat from "@/app/(chat)/components";
 
 import React, { FC } from "react";
 import { getChatById, getMessagesByChatId, getChats } from "@/actions/chat";

@@ -8,18 +8,18 @@ import {
   RefreshCcwIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { Message } from "../ai-elements/message";
-import { MessageContent } from "../ai-elements/message";
-import { Response } from "../ai-elements/response";
-import { Action } from "../ai-elements/actions";
-import { Actions } from "../ai-elements/actions";
+import { Message } from "../../../components/ai-elements/message";
+import { MessageContent } from "../../../components/ai-elements/message";
+import { Response } from "../../../components/ai-elements/response";
+import { Action } from "../../../components/ai-elements/actions";
+import { Actions } from "../../../components/ai-elements/actions";
 import {
   Tool,
   ToolContent,
   ToolHeader,
   ToolInput,
   ToolOutput,
-} from "../ai-elements/tool";
+} from "../../../components/ai-elements/tool";
 import { ChatMessage } from "@/app/api/chat/route";
 
 interface AIMessageProps {

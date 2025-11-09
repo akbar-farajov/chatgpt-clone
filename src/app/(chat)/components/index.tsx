@@ -1,13 +1,13 @@
 "use client";
 import { FC, useState, useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk/react";
-import { Messages } from "@/components/chat/messages";
-import { ChatComposer } from "@/components/chat/chat-composer";
+import { Messages } from "@/app/(chat)/components/messages";
+import { ChatComposer } from "@/app/(chat)/components/chat-composer";
 import { DefaultChatTransport } from "ai";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
-import { PromptInputMessage } from "../ai-elements/prompt-input";
+import { PromptInputMessage } from "../../../components/ai-elements/prompt-input";
 import { ChatMessage } from "@/app/api/chat/route";
 
 interface ChatProps {

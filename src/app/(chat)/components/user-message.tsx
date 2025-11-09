@@ -2,11 +2,11 @@
 
 import { FC, useState } from "react";
 import { CopyIcon, CheckIcon, PencilIcon } from "lucide-react";
-import { Message } from "../ai-elements/message";
-import { MessageContent } from "../ai-elements/message";
-import { Response } from "../ai-elements/response";
-import { Action } from "../ai-elements/actions";
-import { Actions } from "../ai-elements/actions";
+import { Message } from "../../../components/ai-elements/message";
+import { MessageContent } from "../../../components/ai-elements/message";
+import { Response } from "../../../components/ai-elements/response";
+import { Action } from "../../../components/ai-elements/actions";
+import { Actions } from "../../../components/ai-elements/actions";
 import { ChatMessage } from "@/app/api/chat/route";
 import Image from "next/image";
 

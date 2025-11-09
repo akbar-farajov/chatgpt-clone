@@ -13,7 +13,7 @@ import {
   PromptInputAttachments,
   PromptInputAttachment,
   PromptInputMessage,
-} from "../ai-elements/prompt-input";
+} from "../../../components/ai-elements/prompt-input";
 
 import { ChatStatus } from "ai";
 import { FC, useRef } from "react";

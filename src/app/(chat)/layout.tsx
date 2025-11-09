@@ -5,7 +5,7 @@ import { getProfile } from "@/actions/profile";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ChatLayoutClient } from "./chat-layout-client";
-import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatHeader } from "@/app/(chat)/components/chat-header";
 
 export default async function ChatLayout({
   children,
@@ -31,7 +31,7 @@ export default async function ChatLayout({
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
       <ChatLayoutClient chats={chats} profile={profile} />
-      <SidebarInset className="flex flex-col h-screen max-h-screen overflow-hidden">
+      <SidebarInset className="flex flex-col h-[100svh] max-h-[100svh] overflow-hidden">
         <ChatHeader />
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>

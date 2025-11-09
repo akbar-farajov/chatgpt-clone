@@ -1,4 +1,4 @@
-import Chat from "@/components/chat";
+import Chat from "@/app/(chat)/components";
 import { Suspense } from "react";
 
 export default async function Home() {

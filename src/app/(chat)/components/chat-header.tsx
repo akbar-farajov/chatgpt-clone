@@ -1,6 +1,6 @@
 import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "../ui/button";
+import { Button } from "../../../components/ui/button";
 import Link from "next/link";
 import { StarIcon } from "lucide-react";
 
