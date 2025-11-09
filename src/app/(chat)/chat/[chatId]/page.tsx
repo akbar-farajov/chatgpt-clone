@@ -7,7 +7,6 @@ import { ChatMessage } from "@/app/api/chat/route";
 import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
 
-
 interface Props {
   params: Promise<{ chatId: string }>;
 }
@@ -42,14 +41,18 @@ const ChatPage: FC<Props> = async ({ params }) => {
     redirect("/login");
   }
 
+  if (!profile) {
+    redirect("/login");
+  }
+
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
-        <Chat
-          chatId={chatId}
-          initialMessages={initialMessages as ChatMessage[]}
-          initialTitle={chat.title}
-          profile={profile}
-        />
+    <Chat
+      chatId={chatId}
+      initialMessages={initialMessages as ChatMessage[]}
+      initialTitle={chat.title}
+      profile={profile}
+    />
   );
 };
 
