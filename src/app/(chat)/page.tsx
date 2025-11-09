@@ -1,13 +1,10 @@
 import Chat from "@/components/chat";
-import { getProfile } from "@/actions/profile";
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function Home() {
-  const { data: profile, error } = await getProfile();
-
-  if (error) {
-    redirect("/login");
-  }
-
-  return <Chat initialMessages={[]} profile={profile} />;
+  return (
+    <Suspense fallback={null}>
+      <Chat initialMessages={[]} />
+    </Suspense>
+  );
 }

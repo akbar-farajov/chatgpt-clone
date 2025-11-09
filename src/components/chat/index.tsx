@@ -14,7 +14,7 @@ interface ChatProps {
   chatId?: string;
   initialMessages: ChatMessage[];
   initialTitle?: string | null;
-  profile: Profile | null;
+  profile?: Profile;
 }
 
 const Chat: FC<ChatProps> = ({

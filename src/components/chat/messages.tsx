@@ -15,7 +15,7 @@ import { UserMessage } from "./user-message";
 interface MessagesProps {
   messages: ChatMessage[];
   status: ChatStatus;
-  profile: Profile | null;
+  profile?: Profile;
 }
 
 export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
@@ -32,7 +32,7 @@ export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
         {messages.length === 0 ? (
           <ConversationEmptyState
             icon={<MessageSquareIcon className="size-6" />}
-            title={`How can I help, ${profile?.full_name || "User"}?`}
+            title={`How can I help, ${profile?.full_name ?? "User"}?`}
             description={`Ask me anything about the documents you upload.`}
           />
         ) : (
