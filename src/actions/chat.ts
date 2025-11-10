@@ -3,8 +3,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { generateText, UIMessage } from "ai";
-import { Json } from "@/lib/supabase/types";
+import type { Json } from "@/lib/supabase/types";
 import { google } from "@ai-sdk/google";
+import { ChatMessage } from "@/app/api/chat/route";
 
 export async function createChat() {
   const supabase = await createClient();
@@ -45,6 +46,7 @@ export async function saveMessage(chatId: string, message: UIMessage) {
       .insert({
         chat_id: chatId,
         role: message.role,
+        message_id: message.id,
         parts: message.parts as Json,
       })
       .select("*")
@@ -73,8 +75,9 @@ export async function getMessagesByChatId(
       .order("created_at", { ascending: true })
       .throwOnError();
     const messages = data.map((message) => ({
-      role: message.role as UIMessage["role"],
-      parts: message.parts as UIMessage["parts"],
+      role: message.role as ChatMessage["role"],
+      parts: message.parts as ChatMessage["parts"],
+      id: message.message_id as ChatMessage["id"],
     }));
 
     return messages as UIMessage[];
@@ -168,5 +171,40 @@ export async function deleteChat(chatId: string) {
   } catch (error) {
     console.error(error);
     return null;
+  }
+}
+
+export async function deleteMessagesAfterRegenerate(
+  chatId: string,
+  messageId: string
+) {
+  const supabase = await createClient();
+  try {
+    const { data: messageToDelete, error: fetchError } = await supabase
+      .from("messages")
+      .select("created_at")
+      .eq("chat_id", chatId)
+      .eq("message_id", messageId)
+      .single();
+
+    if (fetchError) {
+      throw new Error(fetchError.message);
+    }
+
+    if (!messageToDelete) {
+      throw new Error("Message not found");
+    }
+
+    const { data } = await supabase
+      .from("messages")
+      .delete()
+      .eq("chat_id", chatId)
+      .gte("created_at", messageToDelete.created_at)
+      .throwOnError();
+
+    return { data, error: null };
+  } catch (error) {
+    console.error(error);
+    return { data: null, error: (error as Error).message };
   }
 }

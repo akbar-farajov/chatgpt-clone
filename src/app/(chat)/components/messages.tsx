@@ -11,14 +11,16 @@ import { Profile } from "@/lib/types";
 import { ChatMessage } from "@/app/api/chat/route";
 import { AIMessage } from "./ai-message";
 import { UserMessage } from "./user-message";
+import { useChatMessages } from "@ai-sdk-tools/store";
 
 interface MessagesProps {
-  messages: ChatMessage[];
   status: ChatStatus;
   profile?: Profile;
 }
 
-export const Messages: FC<MessagesProps> = ({ messages, status, profile }) => {
+export const Messages: FC<MessagesProps> = ({ status, profile }) => {
+  const messages = useChatMessages<ChatMessage>();
+  console.log(messages);
   const isLastMessageStreaming = (index: number) => {
     return (
       index === messages.length - 1 &&

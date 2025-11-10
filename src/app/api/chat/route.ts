@@ -1,4 +1,5 @@
 import {
+  deleteMessagesAfterRegenerate,
   generateTitleFromUserMessage,
   getChatById,
   getMessagesByChatId,
@@ -29,11 +30,51 @@ export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { message, id }: { message: ChatMessage; id: string } =
-    await req.json();
+  const {
+    message,
+    id,
+    trigger,
+    messageId,
+  }: {
+    message: ChatMessage;
+    id: string;
+    trigger: "submit-message" | "regenerate-message";
+    messageId: string;
+  } = await req.json();
 
-  await saveMessage(id, message);
   const chat = await getChatById(id);
+  switch (trigger) {
+    case "submit-message": {
+      if (!message) {
+        throw new Error("message is required");
+      }
+
+      if (message.role === "user") {
+        const { error } = await saveMessage(id, message);
+        if (error) {
+          throw error;
+        }
+      }
+      break;
+    }
+
+    case "regenerate-message": {
+      if (!messageId) {
+        throw new Error("messageId is required");
+      }
+
+      const { error } = await deleteMessagesAfterRegenerate(id, messageId);
+      if (error) {
+        throw new Error(error);
+      }
+
+      break;
+    }
+
+    default: {
+      throw new Error(`Trigger '${trigger}' is not supported`);
+    }
+  }
 
   const messages = await getMessagesByChatId(id);
   if (!messages) {
@@ -47,6 +88,7 @@ export async function POST(req: Request) {
         system: SYSTEM_PROMPT,
         messages: convertToModelMessages(messages),
         tools,
+
         stopWhen: stepCountIs(10),
         async onFinish() {
           if (!chat?.title) {
@@ -63,6 +105,7 @@ export async function POST(req: Request) {
 
       writer.merge(
         result.toUIMessageStream({
+          generateMessageId: generateUUID,
           async onFinish({ responseMessage }) {
             await saveMessage(id, responseMessage);
           },

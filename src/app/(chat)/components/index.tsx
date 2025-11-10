@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState, useEffect, useRef } from "react";
-import { useChat } from "@ai-sdk/react";
+import { useChat } from "@ai-sdk-tools/store";
 import { Messages } from "@/app/(chat)/components/messages";
 import { ChatComposer } from "@/app/(chat)/components/chat-composer";
 import { DefaultChatTransport } from "ai";
@@ -9,6 +9,7 @@ import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../../../components/ai-elements/prompt-input";
 import { ChatMessage } from "@/app/api/chat/route";
+import { generateUUID } from "@/lib/utils";
 
 interface ChatProps {
   chatId?: string;
@@ -32,15 +33,43 @@ const Chat: FC<ChatProps> = ({
   const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
     id: currentChatId,
     messages: initialMessages,
+    generateId: generateUUID,
     transport: new DefaultChatTransport({
       prepareSendMessagesRequest(request) {
-        return {
-          body: {
-            id: request.id,
-            message: request.messages.at(-1),
-            ...request.body,
-          },
-        };
+        const { id, messages, body, trigger, messageId } = request as any;
+
+        switch (trigger) {
+          case "submit-message": {
+            return {
+              body: {
+                id,
+                trigger,
+                message: messages.at(-1),
+                ...body,
+              },
+            };
+          }
+          case "regenerate-message": {
+            // messageId is provided by the AI SDK when regenerate is called
+            return {
+              body: {
+                id,
+                trigger,
+                messageId,
+                ...body,
+              },
+            };
+          }
+          default: {
+            return {
+              body: {
+                id,
+                trigger,
+                ...body,
+              },
+            };
+          }
+        }
       },
     }),
 
@@ -85,7 +114,7 @@ const Chat: FC<ChatProps> = ({
 
   return (
     <>
-      <Messages messages={messages} status={status} profile={profile} />
+      <Messages status={status} profile={profile} />
       <ChatComposer
         onSubmit={handleSubmit}
         onStop={stop}

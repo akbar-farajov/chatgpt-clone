@@ -13,6 +13,7 @@ import { MessageContent } from "../../../components/ai-elements/message";
 import { Response } from "../../../components/ai-elements/response";
 import { Action } from "../../../components/ai-elements/actions";
 import { Actions } from "../../../components/ai-elements/actions";
+import { useChatActions, useChatMessages } from "@ai-sdk-tools/store";
 import {
   Tool,
   ToolContent,
@@ -33,10 +34,12 @@ export const AIMessage: FC<AIMessageProps> = ({
   index,
   isStreaming = false,
 }) => {
+  const { regenerate } = useChatActions();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopy = async (text: string, messageId: string) => {
     try {
+      console.log(message);
       await navigator.clipboard.writeText(text);
       setCopiedId(messageId);
       setTimeout(() => setCopiedId(null), 2000);
@@ -45,13 +48,13 @@ export const AIMessage: FC<AIMessageProps> = ({
     }
   };
 
-  const handleRegenerate = () => {
-    console.log("Regenerate functionality not yet implemented");
-  };
-
   const textContent = message.parts
     .map((part) => (part.type === "text" ? part.text : ""))
     .join("\n");
+
+  const handleRegenerate = () => {
+    regenerate({ messageId: message.id });
+  };
 
   return (
     <Message

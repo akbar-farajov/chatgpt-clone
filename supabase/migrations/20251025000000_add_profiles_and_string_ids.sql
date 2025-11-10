@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS public.chats (
 -- Create messages table with string ID
 CREATE TABLE IF NOT EXISTS public.messages (
     id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    message_id TEXT,
     role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
     chat_id TEXT NOT NULL REFERENCES public.chats(id) ON DELETE CASCADE,
     parts JSONB NOT NULL DEFAULT '[]'::jsonb,
