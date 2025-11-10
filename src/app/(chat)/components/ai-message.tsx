@@ -25,13 +25,11 @@ import { ChatMessage } from "@/app/api/chat/route";
 
 interface AIMessageProps {
   message: ChatMessage;
-  index: number;
   isStreaming?: boolean;
 }
 
 export const AIMessage: FC<AIMessageProps> = ({
   message,
-  index,
   isStreaming = false,
 }) => {
   const { regenerate } = useChatActions();
@@ -39,7 +37,6 @@ export const AIMessage: FC<AIMessageProps> = ({
 
   const handleCopy = async (text: string, messageId: string) => {
     try {
-      console.log(message);
       await navigator.clipboard.writeText(text);
       setCopiedId(messageId);
       setTimeout(() => setCopiedId(null), 2000);

@@ -13,13 +13,13 @@ import { generateUUID } from "@/lib/utils";
 
 interface ChatProps {
   chatId?: string;
-  initialMessages: ChatMessage[];
+  initialMessages?: ChatMessage[];
   profile?: Profile;
 }
 
 const Chat: FC<ChatProps> = ({
   chatId: initialChatId,
-  initialMessages,
+  initialMessages = [],
   profile,
 }) => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const Chat: FC<ChatProps> = ({
   const [input, setInput] = useState("");
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
-  const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
+  const { messages, sendMessage, stop } = useChat<ChatMessage>({
     id: currentChatId,
     messages: initialMessages,
     generateId: generateUUID,
@@ -50,7 +50,6 @@ const Chat: FC<ChatProps> = ({
             };
           }
           case "regenerate-message": {
-            // messageId is provided by the AI SDK when regenerate is called
             return {
               body: {
                 id,
@@ -108,20 +107,13 @@ const Chat: FC<ChatProps> = ({
     }
 
     sendMessage({ text: data.text || "", files: data.files || [] });
-
     setInput("");
   };
 
   return (
     <>
-      <Messages status={status} profile={profile} />
-      <ChatComposer
-        onSubmit={handleSubmit}
-        onStop={stop}
-        setInput={setInput}
-        input={input}
-        status={status}
-      />
+      <Messages profile={profile} />
+      <ChatComposer onSubmit={handleSubmit} setInput={setInput} input={input} />
     </>
   );
 };

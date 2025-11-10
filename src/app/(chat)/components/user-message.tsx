@@ -12,10 +12,9 @@ import Image from "next/image";
 
 interface UserMessageProps {
   message: ChatMessage;
-  index: number;
 }
 
-export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
+export const UserMessage: FC<UserMessageProps> = ({ message }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopy = async (text: string, messageId: string) => {
@@ -29,7 +28,6 @@ export const UserMessage: FC<UserMessageProps> = ({ message, index }) => {
   };
 
   const handleEdit = () => {
-    // TODO: Implement edit functionality
     console.log("Edit functionality not yet implemented");
   };
 

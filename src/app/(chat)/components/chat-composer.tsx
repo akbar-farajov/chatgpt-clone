@@ -1,4 +1,5 @@
 "use client";
+import { useChatStatus, useChat } from "@ai-sdk-tools/store";
 import {
   PromptInput,
   PromptInputBody,
@@ -15,23 +16,20 @@ import {
   PromptInputMessage,
 } from "../../../components/ai-elements/prompt-input";
 
-import { ChatStatus } from "ai";
 import { FC, useRef } from "react";
 
 interface ChatComposerProps {
   onSubmit: (data: PromptInputMessage) => void;
-  onStop: () => void;
   setInput: (input: string) => void;
   input: string;
-  status: ChatStatus;
 }
 export const ChatComposer: FC<ChatComposerProps> = ({
   setInput,
   input,
-  status,
   onSubmit,
-  onStop,
 }) => {
+  const { stop } = useChat();
+  const chatStatus = useChatStatus();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
@@ -60,9 +58,9 @@ export const ChatComposer: FC<ChatComposerProps> = ({
           </PromptInputActionMenu>
         </PromptInputTools>
         <PromptInputSubmit
-          disabled={!input.trim() && status !== "streaming"}
-          status={status}
-          onStop={onStop}
+          disabled={!input.trim() && chatStatus !== "streaming"}
+          status={chatStatus}
+          onStop={() => stop()}
         />
       </PromptInputFooter>
     </PromptInput>

@@ -4,27 +4,26 @@ import { ConversationContent } from "../../../components/ai-elements/conversatio
 import { ConversationEmptyState } from "../../../components/ai-elements/conversation";
 import { MessageSquareIcon } from "lucide-react";
 import { ConversationScrollButton } from "../../../components/ai-elements/conversation";
-import { ChatStatus } from "ai";
 import { Loader } from "../../../components/ai-elements/loader";
 import { Shimmer } from "../../../components/ai-elements/shimmer";
 import { Profile } from "@/lib/types";
 import { ChatMessage } from "@/app/api/chat/route";
 import { AIMessage } from "./ai-message";
 import { UserMessage } from "./user-message";
-import { useChatMessages } from "@ai-sdk-tools/store";
+import { useChatMessages, useChatStatus } from "@ai-sdk-tools/store";
 
 interface MessagesProps {
-  status: ChatStatus;
   profile?: Profile;
 }
 
-export const Messages: FC<MessagesProps> = ({ status, profile }) => {
+export const Messages: FC<MessagesProps> = ({ profile }) => {
+  const chatStatus = useChatStatus();
   const messages = useChatMessages<ChatMessage>();
-  console.log(messages);
+
   const isLastMessageStreaming = (index: number) => {
     return (
       index === messages.length - 1 &&
-      (status === "streaming" || status === "submitted")
+      (chatStatus === "streaming" || chatStatus === "submitted")
     );
   };
 
@@ -41,22 +40,21 @@ export const Messages: FC<MessagesProps> = ({ status, profile }) => {
           messages.map((message, index) => {
             const key = `${message.role}-${message.id || index}-${index}`;
             if (message.role === "user") {
-              return <UserMessage key={key} message={message} index={index} />;
+              return <UserMessage key={key} message={message} />;
             }
             return (
               <AIMessage
                 key={key}
                 message={message}
-                index={index}
                 isStreaming={isLastMessageStreaming(index)}
               />
             );
           })
         )}
-        {status === "submitted" && (
+        {chatStatus === "submitted" && (
           <Shimmer duration={1}>Generating your response...</Shimmer>
         )}
-        {status === "streaming" && <Loader />}
+        {chatStatus === "streaming" && <Loader />}
       </ConversationContent>
       <ConversationScrollButton />
     </Conversation>
