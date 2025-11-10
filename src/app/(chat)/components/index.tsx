@@ -53,7 +53,9 @@ const Chat: FC<ChatProps> = ({
       }
     },
     onFinish() {
-      router.refresh();
+      if (messages.length === 0) {
+        router.refresh();
+      }
     },
   });
 
