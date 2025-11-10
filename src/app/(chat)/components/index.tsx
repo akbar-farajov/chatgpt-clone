@@ -13,23 +13,19 @@ import { ChatMessage } from "@/app/api/chat/route";
 interface ChatProps {
   chatId?: string;
   initialMessages: ChatMessage[];
-  initialTitle?: string | null;
   profile?: Profile;
 }
 
 const Chat: FC<ChatProps> = ({
   chatId: initialChatId,
   initialMessages,
-  initialTitle,
   profile,
 }) => {
   const router = useRouter();
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
   );
-  const [title, setTitle] = useState<string | undefined>(
-    initialTitle || undefined
-  );
+
   const [input, setInput] = useState("");
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
@@ -47,11 +43,7 @@ const Chat: FC<ChatProps> = ({
         };
       },
     }),
-    onData({ data, type }) {
-      if (type === "data-title") {
-        setTitle(data as string);
-      }
-    },
+
     onFinish() {
       if (messages.length === 0) {
         router.refresh();

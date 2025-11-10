@@ -50,7 +50,6 @@ const ChatPage: FC<Props> = async ({ params }) => {
     <Chat
       chatId={chatId}
       initialMessages={initialMessages as ChatMessage[]}
-      initialTitle={chat.title}
       profile={profile}
     />
   );

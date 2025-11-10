@@ -55,7 +55,7 @@ const Loading = () => {
           </div>
         </div>
 
-        <div className="mt-4 w-full max-w-3xl mx-auto p-2 mb-4 md:mb-8 shadow-xs bg-background rounded-lg">
+        <div className="mt-4 w-full max-w-3xl mx-auto p-2 mb-16 md:mb-20 shadow-xs bg-background rounded-lg">
           <div className="flex justify-between items-end h-28 bg-muted  rounded-sm p-4 space-y-2">
             <Skeleton className="size-8 bg-primary/10" />
             <Skeleton className="size-10 rounded-full bg-primary/10" />
