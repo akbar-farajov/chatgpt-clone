@@ -53,10 +53,7 @@ const Chat: FC<ChatProps> = ({
       }
     },
     onFinish() {
-      if (currentChatId && !initialChatId) {
-        router.push(`/chat/${currentChatId}`);
-        router.refresh();
-      }
+      router.refresh();
     },
   });
 
@@ -64,6 +61,7 @@ const Chat: FC<ChatProps> = ({
     if (currentChatId && pendingMessageRef.current) {
       const message = pendingMessageRef.current;
       pendingMessageRef.current = null;
+      window.history.replaceState({}, "", `/chat/${currentChatId}`);
       sendMessage({ text: message.text || "", files: message.files || [] });
       setInput("");
     }

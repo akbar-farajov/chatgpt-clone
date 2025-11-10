@@ -1,7 +1,7 @@
 import Chat from "@/app/(chat)/components";
 
 import React, { FC } from "react";
-import { getChatById, getMessagesByChatId, getChats } from "@/actions/chat";
+import { getChatById, getMessagesByChatId } from "@/actions/chat";
 import { notFound, redirect } from "next/navigation";
 import { ChatMessage } from "@/app/api/chat/route";
 import { getProfile } from "@/actions/profile";
