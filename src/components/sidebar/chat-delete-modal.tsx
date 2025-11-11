@@ -12,6 +12,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
+import { toast } from "sonner";
 
 interface ChatDeleteModalProps {
   open: boolean;
@@ -31,7 +32,12 @@ export const ChatDeleteModal: FC<ChatDeleteModalProps> = ({
 
   const handleDeleteChat = async () => {
     startTransition(async () => {
-      await deleteChat(chatId);
+      try {
+        await deleteChat(chatId);
+      } catch (error) {
+        toast.error((error as Error).message);
+        console.error(error);
+      }
       onOpenChange(false);
       if (chatId === currentChatId) {
         router.push("/");

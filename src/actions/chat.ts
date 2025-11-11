@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { generateText, UIMessage } from "ai";
 import type { Json } from "@/lib/supabase/types";
 import { google } from "@ai-sdk/google";
-import { ChatMessage } from "@/app/api/chat/route";
+import { ChatMessage } from "@/app/(chat)/api/chat/route";
 
 export async function createChat() {
   const supabase = await createClient();

@@ -21,7 +21,7 @@ import {
   ToolInput,
   ToolOutput,
 } from "../../../components/ai-elements/tool";
-import { ChatMessage } from "@/app/api/chat/route";
+import { ChatMessage } from "@/app/(chat)/api/chat/route";
 
 interface AIMessageProps {
   message: ChatMessage;

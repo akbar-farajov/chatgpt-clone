@@ -8,7 +8,7 @@ import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../../../components/ai-elements/prompt-input";
-import { ChatMessage } from "@/app/api/chat/route";
+import { ChatMessage } from "@/app/(chat)/api/chat/route";
 import { generateUUID } from "@/lib/utils";
 
 interface ChatProps {

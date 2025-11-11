@@ -3,7 +3,7 @@ import Chat from "@/app/(chat)/components";
 import React, { FC } from "react";
 import { getChatById, getMessagesByChatId } from "@/actions/chat";
 import { notFound, redirect } from "next/navigation";
-import { ChatMessage } from "@/app/api/chat/route";
+import { ChatMessage } from "@/app/(chat)/api/chat/route";
 import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
 import { Provider } from "@ai-sdk-tools/store";
