@@ -2,10 +2,10 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { generateText, UIMessage } from "ai";
+import { generateText } from "ai";
 import type { Json } from "@/lib/supabase/types";
 import { google } from "@ai-sdk/google";
-import { ChatMessage } from "@/app/(chat)/api/chat/route";
+import { ChatMessage } from "@/lib/types";
 
 export async function createChat() {
   const supabase = await createClient();
@@ -37,7 +37,7 @@ export async function createChat() {
   }
 }
 
-export async function saveMessage(chatId: string, message: UIMessage) {
+export async function saveMessage(chatId: string, message: ChatMessage) {
   const supabase = await createClient();
 
   try {
@@ -65,7 +65,7 @@ export async function saveMessage(chatId: string, message: UIMessage) {
 
 export async function getMessagesByChatId(
   chatId: string
-): Promise<UIMessage[] | null> {
+): Promise<ChatMessage[] | null> {
   const supabase = await createClient();
   try {
     const { data } = await supabase
@@ -80,7 +80,7 @@ export async function getMessagesByChatId(
       id: message.message_id as ChatMessage["id"],
     }));
 
-    return messages as UIMessage[];
+    return messages as ChatMessage[];
   } catch (error) {
     console.error(error);
     return null;
@@ -125,7 +125,7 @@ export async function getChatById(chatId: string) {
 export async function generateTitleFromUserMessage({
   message,
 }: {
-  message: UIMessage;
+  message: ChatMessage;
 }) {
   const { text: title } = await generateText({
     model: google("gemini-2.5-flash"),

@@ -1,4 +1,5 @@
-const Loading = () => {
-  return null;
-};
-export default Loading;
+import { ChatSkeleton } from "./components";
+
+export default function Loading() {
+  return <ChatSkeleton />;
+}

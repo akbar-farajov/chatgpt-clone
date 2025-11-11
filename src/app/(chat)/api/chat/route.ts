@@ -21,11 +21,9 @@ import {
 import { getTools } from "@/tools";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import { generateUUID } from "@/lib/utils";
+import { ChatMessage } from "@/lib/types";
 
 const tools = getTools();
-
-export type ChatTools = InferUITools<typeof tools>;
-export type ChatMessage = UIMessage<never, UIDataTypes, ChatTools>;
 
 export const maxDuration = 30;
 
@@ -107,7 +105,7 @@ export async function POST(req: Request) {
         result.toUIMessageStream({
           generateMessageId: generateUUID,
           async onFinish({ responseMessage }) {
-            await saveMessage(id, responseMessage);
+            await saveMessage(id, responseMessage as ChatMessage);
           },
         })
       );

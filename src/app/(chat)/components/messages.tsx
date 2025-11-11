@@ -7,7 +7,7 @@ import { ConversationScrollButton } from "../../../components/ai-elements/conver
 import { Loader } from "../../../components/ai-elements/loader";
 import { Shimmer } from "../../../components/ai-elements/shimmer";
 import { Profile } from "@/lib/types";
-import { ChatMessage } from "@/app/(chat)/api/chat/route";
+import { ChatMessage } from "@/lib/types";
 import { AIMessage } from "./ai-message";
 import { UserMessage } from "./user-message";
 import { useChatMessages, useChatStatus } from "@ai-sdk-tools/store";

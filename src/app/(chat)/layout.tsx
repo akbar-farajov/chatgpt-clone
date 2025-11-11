@@ -31,7 +31,7 @@ export default async function ChatLayout({
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
       <ChatLayoutClient chats={chats} profile={profile} />
-      <SidebarInset className="flex flex-col h-[100svh] max-h-[100svh] overflow-hidden">
+      <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden">
         <ChatHeader />
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>

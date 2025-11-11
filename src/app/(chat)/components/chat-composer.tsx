@@ -36,7 +36,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({
     <PromptInput
       onSubmit={onSubmit}
       multiple={true}
-      className="mt-4 w-full max-w-3xl mx-auto p-2 mb-4 md:mb-8 shadow-xs bg-background rounded-lg"
+      className="mt-4 w-full max-w-3xl mx-auto mb-4 p-2 shadow-xs bg-background rounded-lg"
     >
       <PromptInputBody>
         <PromptInputAttachments>
