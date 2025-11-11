@@ -191,10 +191,6 @@ export async function deleteMessagesAfterRegenerate(
       throw new Error(fetchError.message);
     }
 
-    if (!messageToDelete) {
-      throw new Error("Message not found");
-    }
-
     const { data } = await supabase
       .from("messages")
       .delete()

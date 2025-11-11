@@ -30,7 +30,7 @@ const Chat: FC<ChatProps> = ({
   const [input, setInput] = useState("");
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
-  const { messages, sendMessage, stop } = useChat<ChatMessage>({
+  const { messages, sendMessage } = useChat<ChatMessage>({
     id: currentChatId,
     messages: initialMessages,
     generateId: generateUUID,

@@ -13,7 +13,7 @@ import { MessageContent } from "../../../components/ai-elements/message";
 import { Response } from "../../../components/ai-elements/response";
 import { Action } from "../../../components/ai-elements/actions";
 import { Actions } from "../../../components/ai-elements/actions";
-import { useChatActions, useChatMessages } from "@ai-sdk-tools/store";
+import { useChatActions } from "@ai-sdk-tools/store";
 import {
   Tool,
   ToolContent,

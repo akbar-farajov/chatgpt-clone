@@ -91,7 +91,7 @@ export async function POST(req: Request) {
 
         stopWhen: stepCountIs(10),
         async onFinish() {
-          if (!chat?.title) {
+          if (!chat?.title && message) {
             const title = await generateTitleFromUserMessage({ message });
             await updateChat(id, { title });
             writer.write({
