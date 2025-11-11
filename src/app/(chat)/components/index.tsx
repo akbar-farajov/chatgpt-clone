@@ -1,6 +1,6 @@
 "use client";
 import { FC, useState, useEffect, useRef } from "react";
-import { useChat } from "@ai-sdk/react";
+import { useChat } from "@ai-sdk-tools/store";
 import { Messages } from "@/app/(chat)/components/messages";
 import { ChatComposer } from "@/app/(chat)/components/chat-composer";
 import { DefaultChatTransport } from "ai";
@@ -9,16 +9,17 @@ import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "../../../components/ai-elements/prompt-input";
 import { ChatMessage } from "@/app/api/chat/route";
+import { generateUUID } from "@/lib/utils";
 
 interface ChatProps {
   chatId?: string;
-  initialMessages: ChatMessage[];
+  initialMessages?: ChatMessage[];
   profile?: Profile;
 }
 
 const Chat: FC<ChatProps> = ({
   chatId: initialChatId,
-  initialMessages,
+  initialMessages = [],
   profile,
 }) => {
   const router = useRouter();
@@ -29,18 +30,45 @@ const Chat: FC<ChatProps> = ({
   const [input, setInput] = useState("");
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
-  const { messages, sendMessage, status, stop } = useChat<ChatMessage>({
+  const { messages, sendMessage, stop } = useChat<ChatMessage>({
     id: currentChatId,
     messages: initialMessages,
+    generateId: generateUUID,
     transport: new DefaultChatTransport({
       prepareSendMessagesRequest(request) {
-        return {
-          body: {
-            id: request.id,
-            message: request.messages.at(-1),
-            ...request.body,
-          },
-        };
+        const { id, messages, body, trigger, messageId } = request as any;
+
+        switch (trigger) {
+          case "submit-message": {
+            return {
+              body: {
+                id,
+                trigger,
+                message: messages.at(-1),
+                ...body,
+              },
+            };
+          }
+          case "regenerate-message": {
+            return {
+              body: {
+                id,
+                trigger,
+                messageId,
+                ...body,
+              },
+            };
+          }
+          default: {
+            return {
+              body: {
+                id,
+                trigger,
+                ...body,
+              },
+            };
+          }
+        }
       },
     }),
 
@@ -79,20 +107,13 @@ const Chat: FC<ChatProps> = ({
     }
 
     sendMessage({ text: data.text || "", files: data.files || [] });
-
     setInput("");
   };
 
   return (
     <>
-      <Messages messages={messages} status={status} profile={profile} />
-      <ChatComposer
-        onSubmit={handleSubmit}
-        onStop={stop}
-        setInput={setInput}
-        input={input}
-        status={status}
-      />
+      <Messages profile={profile} />
+      <ChatComposer onSubmit={handleSubmit} setInput={setInput} input={input} />
     </>
   );
 };

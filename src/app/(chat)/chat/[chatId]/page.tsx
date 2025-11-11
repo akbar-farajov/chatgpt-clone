@@ -6,6 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { ChatMessage } from "@/app/api/chat/route";
 import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
+import { Provider } from "@ai-sdk-tools/store";
 
 interface Props {
   params: Promise<{ chatId: string }>;
@@ -47,11 +48,13 @@ const ChatPage: FC<Props> = async ({ params }) => {
 
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
-    <Chat
-      chatId={chatId}
-      initialMessages={initialMessages as ChatMessage[]}
-      profile={profile}
-    />
+    <Provider>
+      <Chat
+        chatId={chatId}
+        initialMessages={initialMessages as ChatMessage[]}
+        profile={profile}
+      />
+    </Provider>
   );
 };
 
