@@ -14,7 +14,7 @@ import {
   PromptInputAttachments,
   PromptInputAttachment,
   PromptInputMessage,
-} from "../../../components/ai-elements/prompt-input";
+} from "@/components/ai-elements/prompt-input";
 
 import { FC, useRef } from "react";
 

@@ -7,7 +7,7 @@ import { DefaultChatTransport } from "ai";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
-import { PromptInputMessage } from "../../../components/ai-elements/prompt-input";
+import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
 

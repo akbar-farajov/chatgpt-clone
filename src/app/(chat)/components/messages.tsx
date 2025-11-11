@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { Conversation } from "../../../components/ai-elements/conversation";
-import { ConversationContent } from "../../../components/ai-elements/conversation";
-import { ConversationEmptyState } from "../../../components/ai-elements/conversation";
+import { Conversation } from "@/components/ai-elements/conversation";
+import { ConversationContent } from "@/components/ai-elements/conversation";
+import { ConversationEmptyState } from "@/components/ai-elements/conversation";
 import { MessageSquareIcon } from "lucide-react";
-import { ConversationScrollButton } from "../../../components/ai-elements/conversation";
-import { Loader } from "../../../components/ai-elements/loader";
-import { Shimmer } from "../../../components/ai-elements/shimmer";
+import { ConversationScrollButton } from "@/components/ai-elements/conversation";
+import { Loader } from "@/components/ai-elements/loader";
+import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Profile } from "@/lib/types";
 import { ChatMessage } from "@/lib/types";
 import { AIMessage } from "./ai-message";
