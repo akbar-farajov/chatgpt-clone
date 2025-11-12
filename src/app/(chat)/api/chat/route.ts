@@ -9,12 +9,9 @@ import {
 import { google } from "@ai-sdk/google";
 import {
   streamText,
-  UIMessage,
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
-  InferUITools,
-  UIDataTypes,
   stepCountIs,
 } from "ai";
 
