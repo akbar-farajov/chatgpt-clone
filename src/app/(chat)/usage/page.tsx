@@ -21,6 +21,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 const UsagePage = async () => {
   const { data: usageData, error: usageError } = await getUserUsage();
   const { data: stats, error: statsError } = await getUserUsageStats();
+  const maxTokens = 128_000;
 
   if (usageError || statsError) {
     return (
@@ -64,8 +65,7 @@ const UsagePage = async () => {
       </div>
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
               <CardHeader>
                 <CardDescription>Total Tokens</CardDescription>
@@ -98,9 +98,16 @@ const UsagePage = async () => {
                 </CardTitle>
               </CardHeader>
             </Card>
+            <Card>
+              <CardHeader>
+                <CardDescription>Max Tokens</CardDescription>
+                <CardTitle className="text-3xl">
+                  {formatNumber(maxTokens)}
+                </CardTitle>
+              </CardHeader>
+            </Card>
           </div>
 
-          {/* Usage Table */}
           <Card>
             <CardHeader>
               <CardTitle>Usage History</CardTitle>

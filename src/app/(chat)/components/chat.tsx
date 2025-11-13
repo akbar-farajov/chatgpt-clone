@@ -118,7 +118,6 @@ export const Chat: FC<ChatProps> = ({
     setInput("");
   };
 
-  console.log("usage", usage);
   return (
     <>
       <Messages profile={profile} />
