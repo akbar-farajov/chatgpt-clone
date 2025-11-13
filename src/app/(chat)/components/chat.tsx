@@ -3,7 +3,7 @@ import { FC, useState, useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk-tools/store";
 import { Messages } from "@/app/(chat)/components/messages";
 import { ChatComposer } from "@/app/(chat)/components/chat-composer";
-import { DefaultChatTransport } from "ai";
+import { DefaultChatTransport, LanguageModelUsage } from "ai";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
@@ -15,12 +15,14 @@ interface ChatProps {
   chatId?: string;
   initialMessages?: ChatMessage[];
   profile?: Profile;
+  usage?: LanguageModelUsage;
 }
 
 export const Chat: FC<ChatProps> = ({
   chatId: initialChatId,
   initialMessages = [],
   profile,
+  usage,
 }) => {
   const router = useRouter();
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
@@ -28,6 +30,7 @@ export const Chat: FC<ChatProps> = ({
   );
 
   const [input, setInput] = useState("");
+
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
   const { messages, sendMessage } = useChat<ChatMessage>({
@@ -77,6 +80,11 @@ export const Chat: FC<ChatProps> = ({
         router.refresh();
       }
     },
+    onData(event) {
+      if (event.type === "data-usage") {
+        console.log((event.data as LanguageModelUsage).outputTokens);
+      }
+    },
   });
 
   useEffect(() => {
@@ -110,10 +118,16 @@ export const Chat: FC<ChatProps> = ({
     setInput("");
   };
 
+  console.log("usage", usage);
   return (
     <>
       <Messages profile={profile} />
-      <ChatComposer onSubmit={handleSubmit} setInput={setInput} input={input} />
+      <ChatComposer
+        onSubmit={handleSubmit}
+        setInput={setInput}
+        input={input}
+        usage={usage as LanguageModelUsage}
+      />
     </>
   );
 };

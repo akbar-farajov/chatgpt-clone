@@ -24,12 +24,14 @@ import {
   Moon,
   Monitor,
   Check,
+  ChartLine,
 } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FC } from "react";
 import type { Profile } from "@/lib/types";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 interface NavUserProps {
   profile: Profile | null;
@@ -104,10 +106,12 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+              <Link href="/usage">
+                <DropdownMenuItem>
+                  <ChartLine />
+                  Usage{" "}
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
                   <Palette />

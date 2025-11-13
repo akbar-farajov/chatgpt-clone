@@ -67,11 +67,11 @@ const ContextIcon = () => {
   return (
     <svg
       aria-label="Model context usage"
-      height="20"
+      height="24"
       role="img"
       style={{ color: "currentcolor" }}
       viewBox={`0 0 ${ICON_VIEWBOX} ${ICON_VIEWBOX}`}
-      width="20"
+      width="24"
     >
       <circle
         cx={ICON_CENTER}
@@ -104,20 +104,13 @@ export type ContextTriggerProps = ComponentProps<typeof Button>;
 export const ContextTrigger = ({ children, ...props }: ContextTriggerProps) => {
   const { usedTokens, maxTokens } = useContextValue();
   const usedPercent = usedTokens / maxTokens;
-  const renderedPercent = new Intl.NumberFormat("en-US", {
-    style: "percent",
-    maximumFractionDigits: 1,
-  }).format(usedPercent);
 
   return (
     <HoverCardTrigger asChild>
       {children ?? (
-        <Button type="button" variant="ghost" {...props}>
-          <span className="font-medium text-muted-foreground">
-            {renderedPercent}
-          </span>
+        <button type="button" size="icon" variant="ghost" {...props}>
           <ContextIcon />
-        </Button>
+        </button>
       )}
     </HoverCardTrigger>
   );

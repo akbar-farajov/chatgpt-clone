@@ -19,6 +19,7 @@ import { getTools } from "@/tools";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import { generateUUID } from "@/lib/utils";
 import { ChatMessage } from "@/lib/types";
+import { createUsage } from "@/actions/usage";
 
 const tools = getTools();
 
@@ -85,7 +86,12 @@ export async function POST(req: Request) {
         tools,
 
         stopWhen: stepCountIs(10),
-        async onFinish() {
+        async onFinish({ usage }) {
+          await createUsage({
+            chatId: id,
+            usage,
+            modelId: "google:gemini-2.5-flash",
+          });
           if (!chat?.title && message) {
             const title = await generateTitleFromUserMessage({ message });
             await updateChat(id, { title });
@@ -95,6 +101,10 @@ export async function POST(req: Request) {
               transient: true,
             });
           }
+          writer.write({
+            type: "data-usage",
+            data: usage,
+          });
         },
       });
 
