@@ -23,14 +23,14 @@ export default async function ChatLayout({
 
   const { data: profile } = await getProfile();
   const chats = (await getChats()) || [];
-
+  const isLoading = chats.length === 0;
   const cookieStore = await cookies();
   const sidebarState = cookieStore.get("sidebar_state");
   const isCollapsed = sidebarState?.value === "false";
 
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
-      <ChatLayoutClient chats={chats} profile={profile} />
+      <ChatLayoutClient chats={chats} profile={profile} isLoading={isLoading} />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>

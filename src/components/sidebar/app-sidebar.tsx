@@ -19,6 +19,7 @@ interface AppSidebarProps {
   currentChatId?: string;
   currentTitle?: string;
   profile: Profile | null;
+  isLoading?: boolean;
 }
 
 export const AppSidebar: FC<AppSidebarProps> = ({
@@ -26,6 +27,7 @@ export const AppSidebar: FC<AppSidebarProps> = ({
   currentChatId,
   currentTitle,
   profile,
+  isLoading = false,
 }) => {
   return (
     <Sidebar collapsible="icon">
@@ -38,10 +40,12 @@ export const AppSidebar: FC<AppSidebarProps> = ({
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
+
         <NavChats
           chats={chats}
           currentChatId={currentChatId}
           currentTitle={currentTitle}
+          isLoading={isLoading}
         />
       </SidebarContent>
       <SidebarFooter>

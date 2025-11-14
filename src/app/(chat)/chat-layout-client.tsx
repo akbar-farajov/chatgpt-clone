@@ -8,11 +8,13 @@ import { FC } from "react";
 interface ChatLayoutClientProps {
   chats: Chat[];
   profile: Profile | null;
+  isLoading?: boolean;
 }
 
 export const ChatLayoutClient: FC<ChatLayoutClientProps> = ({
   chats,
   profile,
+  isLoading,
 }) => {
   const segments = useSelectedLayoutSegments();
 
@@ -21,6 +23,7 @@ export const ChatLayoutClient: FC<ChatLayoutClientProps> = ({
 
   return (
     <AppSidebar
+      isLoading={isLoading}
       chats={chats}
       currentChatId={currentChatId}
       currentTitle={undefined}
