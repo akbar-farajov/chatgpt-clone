@@ -5,6 +5,7 @@ import { ChatHeader } from "./components/chat-header";
 export default async function Home() {
   return (
     <>
+      <ChatHeader />
       <Provider>
         <Chat />
       </Provider>

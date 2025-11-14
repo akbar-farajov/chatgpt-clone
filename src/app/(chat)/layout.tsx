@@ -33,7 +33,6 @@ export default async function ChatLayout({
         profilePromise={profilePromise}
       />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
-        <ChatHeader />
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>

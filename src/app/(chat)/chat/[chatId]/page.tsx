@@ -53,6 +53,7 @@ const ChatPage: FC<Props> = async ({ params }) => {
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
     <>
+      <ChatHeader />
       <Provider>
         <Chat
           chatId={chatId}
