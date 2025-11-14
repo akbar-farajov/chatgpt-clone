@@ -54,7 +54,7 @@ const ChatPage: FC<Props> = async ({ params }) => {
   return (
     <>
       <ChatHeader />
-      <Provider>
+      <Provider key={chatId}>
         <Chat
           chatId={chatId}
           initialMessages={initialMessages as ChatMessage[]}

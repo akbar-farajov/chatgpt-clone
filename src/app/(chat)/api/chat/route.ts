@@ -72,10 +72,11 @@ export async function POST(req: Request) {
     }
   }
 
-  const messages = await getMessagesByChatId(id);
-  if (!messages) {
+  const previousMessages = await getMessagesByChatId(id);
+  if (!previousMessages) {
     return new Response("No messages found", { status: 404 });
   }
+  const messages = [...previousMessages, message];
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {

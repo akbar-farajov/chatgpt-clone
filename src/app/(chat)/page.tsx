@@ -6,7 +6,7 @@ export default async function Home() {
   return (
     <>
       <ChatHeader />
-      <Provider>
+      <Provider key="home">
         <Chat />
       </Provider>
     </>
