@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const result = streamText({
-        model: google("gemini-2.5-flash"),
+        model: google("gemini-2.5-flash-lite"),
         system: SYSTEM_PROMPT,
         messages: convertToModelMessages(messages),
         tools,
@@ -91,7 +91,7 @@ export async function POST(req: Request) {
           await createUsage({
             chatId: id,
             usage,
-            modelId: "google:gemini-2.5-flash",
+            modelId: "google:gemini-2.5-flash-lite",
           });
           if (!chat?.title && message) {
             const title = await generateTitleFromUserMessage({ message });

@@ -1,4 +1,4 @@
-import React, { FC, useTransition } from "react";
+import { FC, useTransition } from "react";
 import { deleteChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 import {
@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
+import { useSWRConfig } from "swr";
 
 interface ChatDeleteModalProps {
   open: boolean;
@@ -29,21 +30,21 @@ export const ChatDeleteModal: FC<ChatDeleteModalProps> = ({
 }) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const handleDeleteChat = async () => {
     startTransition(async () => {
       try {
         await deleteChat(chatId);
+        if (chatId === currentChatId) {
+          router.push("/");
+        }
+        mutate("/api/chats");
       } catch (error) {
         toast.error((error as Error).message);
         console.error(error);
       }
       onOpenChange(false);
-      if (chatId === currentChatId) {
-        router.push("/");
-      } else {
-        router.refresh();
-      }
     });
   };
 

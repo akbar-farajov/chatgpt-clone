@@ -117,8 +117,8 @@ export const Chat: FC<ChatProps> = ({
     if (currentChatId && pendingMessageRef.current && !initialChatId) {
       const message = pendingMessageRef.current;
       pendingMessageRef.current = null;
-      router.push(`/chat/${currentChatId}`);
       sessionStorage.setItem("pendingMessage", JSON.stringify(message));
+      router.push(`/chat/${currentChatId}`);
     }
   }, [currentChatId, initialChatId, router]);
 

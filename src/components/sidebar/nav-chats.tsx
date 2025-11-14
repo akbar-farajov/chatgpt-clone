@@ -19,6 +19,7 @@ import { FC, useTransition, useState } from "react";
 import { ChatDeleteModal } from "./chat-delete-modal";
 import { Input } from "../ui/input";
 import { updateChat } from "@/actions/chat";
+import { useSWRConfig } from "swr";
 
 interface NavChatsProps {
   chats: Chat[];
@@ -31,6 +32,7 @@ export const NavChats: FC<NavChatsProps> = ({
   currentChatId,
   currentTitle,
 }) => {
+  const { mutate } = useSWRConfig();
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [renameChatId, setRenameChatId] = useState<string | null>(null);
   const [renameChat, setRenameChat] = useState<string>("");
@@ -39,6 +41,7 @@ export const NavChats: FC<NavChatsProps> = ({
   const handleSaveRename = async (chatId: string) => {
     startTransition(async () => {
       await updateChat(chatId, { title: renameChat });
+      mutate("/api/chats");
       setRenameChatId(null);
       setRenameChat("");
     });

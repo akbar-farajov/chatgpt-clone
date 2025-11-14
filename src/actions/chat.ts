@@ -132,7 +132,7 @@ export async function generateTitleFromUserMessage({
   message: ChatMessage;
 }) {
   const { text: title } = await generateText({
-    model: google("gemini-2.5-flash"),
+    model: google("gemini-2.5-flash-lite"),
     system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long
@@ -174,7 +174,6 @@ export async function deleteChat(chatId: string) {
       .eq("id", chatId)
       .throwOnError();
 
-    // Sidebar-dəki chat list-i yeniləmək üçün
     revalidatePath("/", "layout");
 
     return data;
