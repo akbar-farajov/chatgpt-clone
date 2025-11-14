@@ -25,19 +25,21 @@ import {
   Monitor,
   Check,
   ChartLine,
+  MessageSquare,
 } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FC } from "react";
-import type { Profile } from "@/lib/types";
+import type { Profile, Chat } from "@/lib/types";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 interface NavUserProps {
   profile: Profile | null;
+  chats: Chat[];
 }
 
-export const NavUser: FC<NavUserProps> = ({ profile }) => {
+export const NavUser: FC<NavUserProps> = ({ profile, chats }) => {
   const { theme, setTheme } = useTheme();
 
   const themeOptions = [
@@ -45,6 +47,8 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
     { value: "dark", label: "Dark", icon: Moon },
     { value: "system", label: "System", icon: Monitor },
   ];
+
+  const totalChats = chats.length;
 
   return (
     <SidebarMenu>
@@ -60,11 +64,13 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
                   src={profile?.avatar_url || ""}
                   alt={profile?.full_name || ""}
                 />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {profile?.full_name?.charAt(0).toUpperCase() || "U"}
+                </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {profile?.full_name || ""}
+                  {profile?.full_name || "User"}
                 </span>
                 <span className="truncate text-xs">{profile?.email || ""}</span>
               </div>
@@ -81,7 +87,7 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {profile?.full_name || ""}
+                    {profile?.full_name || "User"}
                   </span>
                   <span className="truncate text-xs">
                     {profile?.email || ""}
@@ -89,6 +95,14 @@ export const NavUser: FC<NavUserProps> = ({ profile }) => {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem disabled>
+                <MessageSquare />
+                <span className="flex-1">Total Chats</span>
+                <span className="text-muted-foreground">{totalChats}</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>

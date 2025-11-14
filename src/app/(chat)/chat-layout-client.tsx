@@ -6,15 +6,13 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { FC } from "react";
 
 interface ChatLayoutClientProps {
-  chats: Chat[];
-  profile: Profile | null;
-  isLoading?: boolean;
+  chatsPromise: Promise<Chat[]>;
+  profilePromise: Promise<Profile | null>;
 }
 
 export const ChatLayoutClient: FC<ChatLayoutClientProps> = ({
-  chats,
-  profile,
-  isLoading,
+  chatsPromise,
+  profilePromise,
 }) => {
   const segments = useSelectedLayoutSegments();
 
@@ -23,11 +21,10 @@ export const ChatLayoutClient: FC<ChatLayoutClientProps> = ({
 
   return (
     <AppSidebar
-      isLoading={isLoading}
-      chats={chats}
+      chatsPromise={chatsPromise}
       currentChatId={currentChatId}
       currentTitle={undefined}
-      profile={profile}
+      profilePromise={profilePromise}
     />
   );
 };

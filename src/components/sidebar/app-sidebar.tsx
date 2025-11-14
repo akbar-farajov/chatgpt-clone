@@ -11,23 +11,22 @@ import {
 import type { Chat, Profile } from "@/lib/types";
 import { FC } from "react";
 import { NewChatButton } from "./new-chat-button";
-import { NavUser } from "./nav-user";
 import { AppSidebarHeader } from "./sidebar-header";
-import { NavChats } from "./nav-chats";
+import { NavChatsWrapper } from "./nav-chats-wrapper";
+import { NavUserWrapper } from "./nav-user-wrapper";
+
 interface AppSidebarProps {
-  chats: Chat[];
+  chatsPromise: Promise<Chat[]>;
   currentChatId?: string;
   currentTitle?: string;
-  profile: Profile | null;
-  isLoading?: boolean;
+  profilePromise: Promise<Profile | null>;
 }
 
 export const AppSidebar: FC<AppSidebarProps> = ({
-  chats,
+  chatsPromise,
   currentChatId,
   currentTitle,
-  profile,
-  isLoading = false,
+  profilePromise,
 }) => {
   return (
     <Sidebar collapsible="icon">
@@ -41,15 +40,17 @@ export const AppSidebar: FC<AppSidebarProps> = ({
           </SidebarMenu>
         </SidebarGroup>
 
-        <NavChats
-          chats={chats}
+        <NavChatsWrapper
+          chatsPromise={chatsPromise}
           currentChatId={currentChatId}
           currentTitle={currentTitle}
-          isLoading={isLoading}
         />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser profile={profile} />
+        <NavUserWrapper
+          profilePromise={profilePromise}
+          chatsPromise={chatsPromise}
+        />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

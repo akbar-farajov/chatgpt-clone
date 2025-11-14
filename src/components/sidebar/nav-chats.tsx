@@ -20,20 +20,17 @@ import { ChatDeleteModal } from "./chat-delete-modal";
 import { Input } from "../ui/input";
 import { updateChat } from "@/actions/chat";
 import { useRouter } from "next/navigation";
-import { Skeleton } from "../ui/skeleton";
 
 interface NavChatsProps {
   chats: Chat[];
   currentChatId?: string;
   currentTitle?: string;
-  isLoading?: boolean;
 }
 
 export const NavChats: FC<NavChatsProps> = ({
   chats,
   currentChatId,
   currentTitle,
-  isLoading = false,
 }) => {
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [renameChatId, setRenameChatId] = useState<string | null>(null);
@@ -53,91 +50,72 @@ export const NavChats: FC<NavChatsProps> = ({
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Chats</SidebarGroupLabel>
-      {isLoading ? (
-        // Show skeleton loaders while loading
-        <>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <SidebarMenuItem key={`skeleton-${index}`}>
-              <div className="flex items-center gap-2 px-2 py-1.5">
-                <Skeleton className="h-8 w-full" />
-              </div>
-            </SidebarMenuItem>
-          ))}
-        </>
-      ) : chats.length === 0 ? (
-        // Show empty state when no chats
-        <div className="px-2 py-4 text-sm text-muted-foreground text-center">
-          No chats yet
-        </div>
-      ) : (
-        // Show actual chats
-        chats.map((chat) => {
-          const displayTitle =
-            currentChatId && chat.id === currentChatId && currentTitle
-              ? currentTitle
-              : chat.title || "New Chat";
-          return (
-            <SidebarMenuItem key={chat.id}>
-              {renameChatId === chat.id ? (
-                <Input
-                  className="p-2"
-                  type="text"
-                  value={renameChat || ""}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setRenameChat(e.target.value)
+      {chats.map((chat) => {
+        const displayTitle =
+          currentChatId && chat.id === currentChatId && currentTitle
+            ? currentTitle
+            : chat.title || "New Chat";
+        return (
+          <SidebarMenuItem key={chat.id}>
+            {renameChatId === chat.id ? (
+              <Input
+                className="p-2"
+                type="text"
+                value={renameChat || ""}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setRenameChat(e.target.value)
+                }
+                disabled={isPending}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter") {
+                    handleSaveRename(chat.id);
                   }
-                  disabled={isPending}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === "Enter") {
-                      handleSaveRename(chat.id);
-                    }
-                  }}
-                  onBlur={() => handleSaveRename(chat.id)}
-                />
-              ) : (
-                <Link href={`/chat/${chat.id}`} className="w-full">
-                  <SidebarMenuButton
-                    className="justify-between w-full"
-                    isActive={currentChatId === chat.id}
-                  >
-                    <span className="text-sm truncate">{displayTitle}</span>
-                  </SidebarMenuButton>
-                </Link>
-              )}
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction showOnHover>
-                    <MoreHorizontal />
-                    <span className="sr-only">More</span>
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-48 rounded-lg"
-                  side="right"
-                  align="start"
+                }}
+                onBlur={() => handleSaveRename(chat.id)}
+              />
+            ) : (
+              <Link href={`/chat/${chat.id}`} className="w-full">
+                <SidebarMenuButton
+                  className="justify-between w-full"
+                  isActive={currentChatId === chat.id}
                 >
-                  <DropdownMenuItem
-                    onSelect={() => {
-                      setRenameChatId(chat.id);
-                      setRenameChat(displayTitle);
-                    }}
-                  >
-                    <PencilIcon className="text-muted-foreground" />
-                    <span>Rename</span>
-                  </DropdownMenuItem>
+                  <span className="text-sm truncate">{displayTitle}</span>
+                </SidebarMenuButton>
+              </Link>
+            )}
 
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => setDeleteChatId(chat.id)}>
-                    <Trash2 className="text-destructive" />
-                    <span className="text-destructive">Delete</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuItem>
-          );
-        })
-      )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuAction showOnHover>
+                  <MoreHorizontal />
+                  <span className="sr-only">More</span>
+                </SidebarMenuAction>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-48 rounded-lg"
+                side="right"
+                align="start"
+              >
+                <DropdownMenuItem
+                  onSelect={() => {
+                    setRenameChatId(chat.id);
+                    setRenameChat(displayTitle);
+                  }}
+                >
+                  <PencilIcon className="text-muted-foreground" />
+                  <span>Rename</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => setDeleteChatId(chat.id)}>
+                  <Trash2 className="text-destructive" />
+                  <span className="text-destructive">Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        );
+      })}
       <ChatDeleteModal
         open={deleteChatId !== null}
         onOpenChange={(open) => !open && setDeleteChatId(null)}

@@ -82,6 +82,22 @@ export const AIMessage: FC<AIMessageProps> = ({
                   </ToolContent>
                 </Tool>
               );
+            case "tool-imageGeneration":
+              return (
+                <>
+                  {part.state === "output-available" && part.output && (
+                    <div className="flex justify-center w-full mt-4">
+                      <Image
+                        src={`data:image/png;base64,${part.output}`}
+                        alt="Generated Image"
+                        width={512}
+                        height={512}
+                        className="rounded-lg shadow-lg max-w-full h-auto"
+                      />
+                    </div>
+                  )}
+                </>
+              );
             case "file":
               if (part.mediaType.startsWith("image/")) {
                 return (
