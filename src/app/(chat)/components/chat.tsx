@@ -10,7 +10,6 @@ import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useSWRConfig } from "swr";
 
 interface ChatProps {
   chatId?: string;
@@ -25,24 +24,14 @@ export const Chat: FC<ChatProps> = ({
   profile,
   usage,
 }) => {
-  const router = useRouter();
-  const { mutate } = useSWRConfig();
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
   );
-
+  const router = useRouter();
   const [input, setInput] = useState("");
   const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
-  const hasSentPendingMessage = useRef(false);
-
-  // Sync currentChatId with initialChatId when it changes (e.g., navigating to home page)
-  useEffect(() => {
-    setCurrentChatId(initialChatId);
-    // Reset the flag when chatId changes to allow sending pending message for new chat
-    hasSentPendingMessage.current = false;
-  }, [initialChatId]);
 
   const { sendMessage } = useChat<ChatMessage>({
     id: currentChatId,
@@ -91,36 +80,19 @@ export const Chat: FC<ChatProps> = ({
         console.log((event.data as LanguageModelUsage).outputTokens);
       }
       if (event.type === "data-title") {
-        mutate("/api/chats");
+        router.refresh();
       }
     },
   });
-
   useEffect(() => {
-    if (initialChatId && !hasSentPendingMessage.current) {
-      const pendingMessageStr = sessionStorage.getItem("pendingMessage");
-      if (pendingMessageStr) {
-        try {
-          const message = JSON.parse(pendingMessageStr) as PromptInputMessage;
-          sessionStorage.removeItem("pendingMessage");
-          hasSentPendingMessage.current = true;
-          sendMessage({ text: message.text || "", files: message.files || [] });
-        } catch (e) {
-          console.error("Failed to parse pending message:", e);
-          sessionStorage.removeItem("pendingMessage");
-        }
-      }
-    }
-  }, [initialChatId, sendMessage]);
-
-  useEffect(() => {
-    if (currentChatId && pendingMessageRef.current && !initialChatId) {
+    if (currentChatId && pendingMessageRef.current) {
       const message = pendingMessageRef.current;
       pendingMessageRef.current = null;
-      sessionStorage.setItem("pendingMessage", JSON.stringify(message));
-      router.push(`/chat/${currentChatId}`);
+      window.history.replaceState({}, "", `/chat/${currentChatId}`);
+      sendMessage({ text: message.text || "", files: message.files || [] });
+      setInput("");
     }
-  }, [currentChatId, initialChatId, router]);
+  }, [currentChatId, sendMessage]);
 
   const handleSubmit = async (data: PromptInputMessage) => {
     const hasText = Boolean(data.text?.trim());
@@ -137,7 +109,6 @@ export const Chat: FC<ChatProps> = ({
       const result = await createChat({ chatId });
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
-        mutate("/api/chats");
       }
       setIsCreatingChat(false);
       return;
