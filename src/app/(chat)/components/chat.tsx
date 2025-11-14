@@ -10,6 +10,7 @@ import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 interface ChatProps {
   chatId?: string;
@@ -25,6 +26,7 @@ export const Chat: FC<ChatProps> = ({
   usage,
 }) => {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
   );
@@ -81,7 +83,7 @@ export const Chat: FC<ChatProps> = ({
         console.log((event.data as LanguageModelUsage).outputTokens);
       }
       if (event.type === "data-title") {
-        router.refresh();
+        mutate("/api/chats");
       }
     },
   });
@@ -111,6 +113,7 @@ export const Chat: FC<ChatProps> = ({
       const result = await createChat({ chatId });
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
+        mutate("/api/chats");
       }
       setIsCreatingChat(false);
       return;
