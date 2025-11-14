@@ -30,6 +30,7 @@ export const Chat: FC<ChatProps> = ({
   );
 
   const [input, setInput] = useState("");
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
@@ -104,12 +105,14 @@ export const Chat: FC<ChatProps> = ({
     }
 
     if (!currentChatId) {
+      setIsCreatingChat(true);
       pendingMessageRef.current = data;
       const chatId = generateUUID();
       const result = await createChat({ chatId });
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
       }
+      setIsCreatingChat(false);
       return;
     }
 
@@ -125,6 +128,7 @@ export const Chat: FC<ChatProps> = ({
         setInput={setInput}
         input={input}
         usage={usage as LanguageModelUsage}
+        isCreatingChat={isCreatingChat}
       />
     </>
   );

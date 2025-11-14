@@ -36,12 +36,14 @@ interface ChatComposerProps {
   setInput: (input: string) => void;
   input: string;
   usage: LanguageModelUsage;
+  isCreatingChat?: boolean;
 }
 export const ChatComposer: FC<ChatComposerProps> = ({
   setInput,
   input,
   onSubmit,
   usage,
+  isCreatingChat = false,
 }) => {
   const { stop } = useChat();
   const chatStatus = useChatStatus();
@@ -96,7 +98,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({
         </PromptInputTools>
         <PromptInputSubmit
           disabled={!input.trim() && chatStatus !== "streaming"}
-          status={chatStatus}
+          status={isCreatingChat ? "submitted" : chatStatus}
           onStop={() => stop()}
         />
       </PromptInputFooter>
