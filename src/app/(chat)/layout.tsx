@@ -5,22 +5,20 @@ import { getProfile } from "@/actions/profile";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ChatLayoutClient } from "./chat-layout-client";
+import { getUser } from "@/actions/auth";
+import { ChatHeader } from "./components/chat-header";
 
 export default async function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  // Create promises but don't await them - pass to client components
   const profilePromise = getProfile().then((res) => res.data);
   const chatsPromise = getChats().then((chats) => chats || []);
 
@@ -35,6 +33,7 @@ export default async function ChatLayout({
         profilePromise={profilePromise}
       />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
+        <ChatHeader />
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>

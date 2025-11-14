@@ -74,3 +74,17 @@ export async function googleLogin() {
     redirect(data.url);
   }
 }
+
+export async function getUser() {
+  const supabase = await createClient();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    return { data: user, error: null };
+  } catch (error) {
+    console.error(error);
+    return { error: (error as Error).message, data: null };
+  }
+}

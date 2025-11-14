@@ -6,12 +6,12 @@ import { generateText } from "ai";
 import type { Json } from "@/lib/supabase/types";
 import { google } from "@ai-sdk/google";
 import { ChatMessage } from "@/lib/types";
+import { getUser } from "./auth";
 
 export async function createChat() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");

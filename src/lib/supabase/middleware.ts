@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getUser } from "@/actions/auth";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -29,25 +30,19 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // refreshing the auth token
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
-  // Define public routes that don't require authentication
   const publicRoutes = ["/login", "/signup", "/auth/callback", "/error"];
   const isPublicRoute = publicRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  // Redirect to login if user is not authenticated and trying to access protected route
   if (!user && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Redirect to home if user is authenticated and trying to access auth pages
   if (
     user &&
     (request.nextUrl.pathname === "/login" ||

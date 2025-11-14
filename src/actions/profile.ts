@@ -3,14 +3,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Tables } from "@/lib/supabase/types";
+import { getUser } from "./auth";
 
 export type Profile = Tables<"profiles">;
 
 export async function getProfile() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -36,9 +35,8 @@ export async function updateProfile(updates: {
   bio?: string;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -69,9 +67,7 @@ export async function createProfile(profile: {
   avatar_url?: string;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");

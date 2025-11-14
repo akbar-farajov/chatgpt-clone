@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Tables, TablesInsert } from "@/lib/supabase/types";
 import type { LanguageModelUsage } from "ai";
+import { getUser } from "./auth";
 
 export type Usage = Tables<"usage">;
 export type UsageInsert = TablesInsert<"usage">;
@@ -14,9 +15,7 @@ export async function createUsage(params: {
   modelId?: string;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -54,9 +53,7 @@ export async function getUserUsage(options?: {
   chatId?: string;
 }) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -99,9 +96,7 @@ export async function getUserUsage(options?: {
 
 export async function getUserUsageStats() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -142,9 +137,7 @@ export async function getUserUsageStats() {
 
 export async function getChatUsage(chatId: string) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -171,9 +164,7 @@ export async function getChatUsage(chatId: string) {
 
 export async function getChatUsageStats(chatId: string) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
@@ -232,9 +223,7 @@ export async function getChatUsageStats(chatId: string) {
 
 export async function deleteUsage(usageId: string) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: user } = await getUser();
 
   if (!user) {
     redirect("/login");
