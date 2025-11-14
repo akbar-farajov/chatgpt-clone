@@ -1,5 +1,4 @@
 import { Chat } from "../../components";
-
 import { FC } from "react";
 import { getChatById, getMessagesByChatId } from "@/actions/chat";
 import { notFound, redirect } from "next/navigation";

@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getChats } from "@/actions/chat";
 import { getProfile } from "@/actions/profile";
@@ -6,7 +5,6 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { ChatLayoutClient } from "./chat-layout-client";
 import { getUser } from "@/actions/auth";
-import { ChatHeader } from "./components/chat-header";
 
 export default async function ChatLayout({
   children,
