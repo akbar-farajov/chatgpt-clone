@@ -3,7 +3,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export const ChatSkeleton = () => {
   return (
-    <div className="max-h-screen h-screen flex flex-col w-full">
+    <div className="flex flex-col w-full overflow-hidden">
       <div className="flex flex-col h-full">
         <SidebarTrigger className="m-2 md:hidden" />
 
