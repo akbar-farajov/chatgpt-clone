@@ -6,10 +6,10 @@ import { ChatComposer } from "@/app/(chat)/components/chat-composer";
 import { DefaultChatTransport, LanguageModelUsage } from "ai";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";
-import { useRouter } from "next/navigation";
 import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface ChatProps {
   chatId?: string;
@@ -33,7 +33,7 @@ export const Chat: FC<ChatProps> = ({
 
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
-  const { messages, sendMessage } = useChat<ChatMessage>({
+  const { sendMessage } = useChat<ChatMessage>({
     id: currentChatId,
     messages: initialMessages,
     generateId: generateUUID,
@@ -75,14 +75,12 @@ export const Chat: FC<ChatProps> = ({
       },
     }),
 
-    onFinish() {
-      if (messages.length === 0) {
-        router.refresh();
-      }
-    },
     onData(event) {
       if (event.type === "data-usage") {
         console.log((event.data as LanguageModelUsage).outputTokens);
+      }
+      if (event.type === "data-title") {
+        router.refresh();
       }
     },
   });
@@ -107,7 +105,8 @@ export const Chat: FC<ChatProps> = ({
 
     if (!currentChatId) {
       pendingMessageRef.current = data;
-      const result = await createChat();
+      const chatId = generateUUID();
+      const result = await createChat({ chatId });
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
       }

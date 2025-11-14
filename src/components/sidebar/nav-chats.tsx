@@ -19,7 +19,6 @@ import { FC, useTransition, useState } from "react";
 import { ChatDeleteModal } from "./chat-delete-modal";
 import { Input } from "../ui/input";
 import { updateChat } from "@/actions/chat";
-import { useRouter } from "next/navigation";
 
 interface NavChatsProps {
   chats: Chat[];
@@ -35,7 +34,6 @@ export const NavChats: FC<NavChatsProps> = ({
   const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
   const [renameChatId, setRenameChatId] = useState<string | null>(null);
   const [renameChat, setRenameChat] = useState<string>("");
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const handleSaveRename = async (chatId: string) => {
@@ -43,7 +41,6 @@ export const NavChats: FC<NavChatsProps> = ({
       await updateChat(chatId, { title: renameChat });
       setRenameChatId(null);
       setRenameChat("");
-      router.refresh();
     });
   };
 

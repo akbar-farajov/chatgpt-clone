@@ -7,8 +7,9 @@ import type { Json } from "@/lib/supabase/types";
 import { google } from "@ai-sdk/google";
 import { ChatMessage } from "@/lib/types";
 import { getUser } from "./auth";
+import { revalidatePath } from "next/cache";
 
-export async function createChat() {
+export async function createChat({ chatId }: { chatId: string }) {
   const supabase = await createClient();
 
   const { data: user } = await getUser();
@@ -22,6 +23,7 @@ export async function createChat() {
       .from("chats")
       .insert({
         user_id: user.id,
+        id: chatId,
       })
       .select("id")
       .single();
@@ -29,6 +31,8 @@ export async function createChat() {
     if (error) {
       throw new Error(error.message);
     }
+
+    revalidatePath("/", "layout");
 
     return { data, error: null };
   } catch (error) {
@@ -151,6 +155,9 @@ export async function updateChat(chatId: string, { title }: { title: string }) {
     if (error) {
       throw new Error(error.message);
     }
+
+    revalidatePath("/", "layout");
+
     return data;
   } catch (error) {
     console.error(error);
@@ -166,6 +173,9 @@ export async function deleteChat(chatId: string) {
       .delete()
       .eq("id", chatId)
       .throwOnError();
+
+    // Sidebar-dəki chat list-i yeniləmək üçün
+    revalidatePath("/", "layout");
 
     return data;
   } catch (error) {
