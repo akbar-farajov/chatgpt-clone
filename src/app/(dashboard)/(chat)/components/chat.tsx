@@ -1,8 +1,8 @@
 "use client";
 import { FC, useState, useEffect, useRef } from "react";
 import { useChat } from "@ai-sdk-tools/store";
-import { Messages } from "@/app/(chat)/components/messages";
-import { ChatComposer } from "@/app/(chat)/components/chat-composer";
+import { Messages } from "@/app/(dashboard)/(chat)/components/messages";
+import { ChatComposer } from "@/app/(dashboard)/(chat)/components/chat-composer";
 import { DefaultChatTransport, LanguageModelUsage } from "ai";
 import type { Profile } from "@/lib/types";
 import { createChat } from "@/actions/chat";

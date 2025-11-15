@@ -3,10 +3,10 @@ import { getChats } from "@/actions/chat";
 import { getProfile } from "@/actions/profile";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
-import { ChatLayoutClient } from "./chat-layout-client";
 import { getUser } from "@/actions/auth";
+import { DashboardLayoutClient } from "./components";
 
-export default async function ChatLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export default async function ChatLayout({
 
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
-      <ChatLayoutClient
+      <DashboardLayoutClient
         chatsPromise={chatsPromise}
         profilePromise={profilePromise}
       />

@@ -5,19 +5,19 @@ import { Chat, Profile } from "@/lib/types";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { FC } from "react";
 
-interface ChatLayoutClientProps {
+interface DashboardLayoutClientProps {
   chatsPromise: Promise<Chat[]>;
   profilePromise: Promise<Profile | null>;
 }
 
-export const ChatLayoutClient: FC<ChatLayoutClientProps> = ({
+export const DashboardLayoutClient: FC<DashboardLayoutClientProps> = ({
   chatsPromise,
   profilePromise,
 }) => {
   const segments = useSelectedLayoutSegments();
 
   const currentChatId =
-    segments[0] === "chat" && segments[1] ? segments[1] : undefined;
+    segments[1] === "chat" && segments[2] ? segments[2] : undefined;
 
   return (
     <AppSidebar
