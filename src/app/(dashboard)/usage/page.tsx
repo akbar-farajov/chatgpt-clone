@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Header } from "@/app/(dashboard)/components";
+import { Button } from "@/components/ui/button";
+import { Sparkles } from "lucide-react";
 
 const UsagePage = async () => {
   const { data: usageData, error: usageError } = await getUserUsage();
@@ -26,10 +29,14 @@ const UsagePage = async () => {
   if (usageError || statsError) {
     return (
       <div className="flex flex-col h-full">
-        <div className="flex items-center gap-4 border-b py-2 px-4">
-          <SidebarTrigger className="md:hidden" />
-          <h1 className="text-lg font-semibold">Usage</h1>
-        </div>
+        <Header
+          title="Usage"
+          rightContent={
+            <Button variant="outline" size="sm">
+              Refresh
+            </Button>
+          }
+        />
         <div className="flex-1 flex items-center justify-center p-4">
           <Card>
             <CardHeader>
@@ -59,10 +66,15 @@ const UsagePage = async () => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center gap-4 border-b py-2 px-4">
-        <SidebarTrigger className="md:hidden" />
-        <h1 className="text-lg font-semibold">Usage</h1>
-      </div>
+      <Header
+        title="Usage"
+        rightContent={
+          <Button size="sm" variant="outline" disabled>
+            <Sparkles className="size-4  mr-2" />
+            <span className="text-sm font-medium">Upgrade Plan</span>
+          </Button>
+        }
+      />
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

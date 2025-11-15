@@ -126,7 +126,7 @@ export const AIMessage: FC<AIMessageProps> = ({
         <Actions className="flex justify-start w-full opacity-0 group-hover:opacity-100 transition-opacity">
           <Action
             label="Copy"
-            tooltip="Copy message"
+            tooltip="Copy"
             variant="ghost"
             onClick={() => handleCopy(textContent, message.id)}
           >
@@ -138,7 +138,7 @@ export const AIMessage: FC<AIMessageProps> = ({
           </Action>
           <Action
             label="Regenerate"
-            tooltip="Regenerate message"
+            tooltip="Regenerate"
             variant="ghost"
             onClick={handleRegenerate}
           >

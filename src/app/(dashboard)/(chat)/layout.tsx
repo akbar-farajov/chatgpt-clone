@@ -1,10 +1,10 @@
 import React from "react";
-import { ChatHeader } from "./components/chat-header";
+import { Header } from "@/app/(dashboard)/components";
 
 function ChatLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <ChatHeader />
+      <Header title="Chat" />
       {children}
     </>
   );

@@ -74,7 +74,7 @@ export const UserMessage: FC<UserMessageProps> = ({ message }) => {
       <Actions className="flex justify-end w-full opacity-0 group-hover:opacity-100 transition-opacity">
         <Action
           label="Copy"
-          tooltip="Copy message"
+          tooltip="Copy"
           variant="ghost"
           onClick={() => handleCopy(textContent, message.id)}
         >
@@ -86,9 +86,10 @@ export const UserMessage: FC<UserMessageProps> = ({ message }) => {
         </Action>
         <Action
           label="Edit"
-          tooltip="Edit message"
+          tooltip="Edit"
           variant="ghost"
           onClick={handleEdit}
+          disabled
         >
           <PencilIcon className="size-4" />
         </Action>
