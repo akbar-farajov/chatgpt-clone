@@ -98,27 +98,33 @@ export type Database = {
           avatar_url: string | null;
           bio: string | null;
           created_at: string;
+          daily_token_count: number;
           email: string;
           full_name: string | null;
           id: string;
+          last_usage_date: string | null;
           updated_at: string;
         };
         Insert: {
           avatar_url?: string | null;
           bio?: string | null;
           created_at?: string;
+          daily_token_count?: number;
           email: string;
           full_name?: string | null;
           id: string;
+          last_usage_date?: string | null;
           updated_at?: string;
         };
         Update: {
           avatar_url?: string | null;
           bio?: string | null;
           created_at?: string;
+          daily_token_count?: number;
           email?: string;
           full_name?: string | null;
           id?: string;
+          last_usage_date?: string | null;
           updated_at?: string;
         };
         Relationships: [];

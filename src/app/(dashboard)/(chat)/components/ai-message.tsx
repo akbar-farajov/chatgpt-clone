@@ -98,6 +98,7 @@ export const AIMessage: FC<AIMessageProps> = ({
                   )}
                 </>
               );
+
             case "file":
               if (part.mediaType.startsWith("image/")) {
                 return (

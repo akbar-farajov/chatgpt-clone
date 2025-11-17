@@ -19,7 +19,11 @@ import { getTools } from "@/tools";
 import { SYSTEM_PROMPT } from "@/lib/prompts";
 import { generateUUID } from "@/lib/utils";
 import { ChatMessage } from "@/lib/types";
-import { createUsage } from "@/actions/usage";
+import {
+  createUsage,
+  checkDailyUsageLimit,
+  updateDailyTokenCount,
+} from "@/actions/usage";
 
 const tools = getTools();
 
@@ -71,6 +75,20 @@ export async function POST(req: Request) {
       throw new Error(`Trigger '${trigger}' is not supported`);
     }
   }
+  const usageCheck = await checkDailyUsageLimit();
+  if (usageCheck.error) {
+    return new Response(
+      JSON.stringify({ error: "Failed to check usage limit" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  if (usageCheck.data?.isLimitExceeded) {
+    return new Response(JSON.stringify("Daily token limit exceeded"), {
+      status: 429,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   const messages = await getMessagesByChatId(id);
   if (!messages) {
@@ -92,6 +110,11 @@ export async function POST(req: Request) {
             usage,
             modelId: "google:gemini-2.5-flash-lite",
           });
+
+          const totalTokens = usage.totalTokens || 0;
+
+          await updateDailyTokenCount(totalTokens);
+
           if (!chat?.title && message) {
             const title = await generateTitleFromUserMessage({ message });
             await updateChat(id, { title });

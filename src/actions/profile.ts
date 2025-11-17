@@ -95,3 +95,41 @@ export async function createProfile(profile: {
     return { error: (error as Error).message, data: null };
   }
 }
+
+export async function getDailyUsage() {
+  const supabase = await createClient();
+  const { data: user } = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("daily_token_count, last_usage_date")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const lastUsageDate = data?.last_usage_date;
+    
+    const effectiveDailyCount =
+      lastUsageDate !== currentDate ? 0 : data?.daily_token_count ?? 0;
+
+    return {
+      data: {
+        dailyTokenCount: effectiveDailyCount,
+        lastUsageDate: data?.last_usage_date,
+      },
+      error: null,
+    };
+  } catch (error) {
+    console.error(error);
+    return { error: (error as Error).message, data: null };
+  }
+}

@@ -10,6 +10,7 @@ import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ChatProps {
   chatId?: string;
@@ -81,6 +82,13 @@ export const Chat: FC<ChatProps> = ({
       }
       if (event.type === "data-title") {
         router.refresh();
+      }
+    },
+    onError(error) {
+      if (error.message) {
+        toast.error(error.message);
+      } else {
+        toast.error("An error occurred while processing your message");
       }
     },
   });

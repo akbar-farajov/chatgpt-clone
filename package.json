@@ -8,7 +8,8 @@
     "start": "next start",
     "generate:types": "npx supabase gen types typescript --local > src/lib/supabase/types.ts",
     "reset:db": "npx supabase db reset",
-    "push:db": "npx supabase db push"
+    "push:db": "npx supabase db push",
+    "push:db-local": "npx supabase db push --local"
   },
   "dependencies": {
     "@ai-sdk-tools/store": "^1.0.8",

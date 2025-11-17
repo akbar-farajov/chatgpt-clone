@@ -10,7 +10,11 @@ import { Profile } from "@/lib/types";
 import { ChatMessage } from "@/lib/types";
 import { AIMessage } from "./ai-message";
 import { UserMessage } from "./user-message";
-import { useChatMessages, useChatStatus } from "@ai-sdk-tools/store";
+import {
+  useChatError,
+  useChatMessages,
+  useChatStatus,
+} from "@ai-sdk-tools/store";
 
 interface MessagesProps {
   profile?: Profile;
@@ -19,6 +23,7 @@ interface MessagesProps {
 export const Messages: FC<MessagesProps> = ({ profile }) => {
   const chatStatus = useChatStatus();
   const messages = useChatMessages<ChatMessage>();
+  const error = useChatError();
 
   const isLastMessageStreaming = (index: number) => {
     return (

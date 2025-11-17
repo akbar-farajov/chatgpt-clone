@@ -246,3 +246,111 @@ export async function deleteUsage(usageId: string) {
     return { error: (error as Error).message, data: null };
   }
 }
+
+const DAILY_TOKEN_LIMIT = 1000;
+
+export async function checkDailyUsageLimit() {
+  const supabase = await createClient();
+  const { data: user } = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  try {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("daily_token_count, last_usage_date")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    const lastUsageDate = profile.last_usage_date;
+
+    const dailyTokenCount =
+      lastUsageDate !== currentDate ? 0 : profile.daily_token_count;
+
+    const isLimitExceeded = dailyTokenCount >= DAILY_TOKEN_LIMIT;
+
+    return {
+      data: {
+        dailyTokenCount,
+        dailyTokenLimit: DAILY_TOKEN_LIMIT,
+        isLimitExceeded,
+        remainingTokens: Math.max(0, DAILY_TOKEN_LIMIT - dailyTokenCount),
+      },
+      error: null,
+    };
+  } catch (error) {
+    console.error("Error checking daily usage limit:", error);
+    return { error: (error as Error).message, data: null };
+  }
+}
+
+
+export async function updateDailyTokenCount(tokenCount: number) {
+  const supabase = await createClient();
+  const { data: user } = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  try {
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    const { data: profile, error: fetchError } = await supabase
+      .from("profiles")
+      .select("daily_token_count, last_usage_date")
+      .eq("id", user.id)
+      .single();
+
+    if (fetchError) {
+      throw new Error(fetchError.message);
+    }
+
+    if (!profile) {
+      throw new Error("Profile not found");
+    }
+
+    const lastUsageDate = profile.last_usage_date;
+
+    const newDailyTokenCount =
+      lastUsageDate !== currentDate
+        ? tokenCount
+        : profile.daily_token_count + tokenCount;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({
+        daily_token_count: newDailyTokenCount,
+        last_usage_date: currentDate,
+      })
+      .eq("id", user.id)
+      .select("daily_token_count, last_usage_date")
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return {
+      data: {
+        dailyTokenCount: data.daily_token_count,
+        lastUsageDate: data.last_usage_date,
+      },
+      error: null,
+    };
+  } catch (error) {
+    console.error("Error updating daily token count:", error);
+    return { error: (error as Error).message, data: null };
+  }
+}
