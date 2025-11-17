@@ -52,6 +52,7 @@ export async function getUserUsage(options?: {
   limit?: number;
   offset?: number;
   chatId?: string;
+  todayOnly?: boolean;
 }) {
   const supabase = await createClient();
   const { data: user } = await getUser();
@@ -69,6 +70,13 @@ export async function getUserUsage(options?: {
 
     if (options?.chatId) {
       query = query.eq("chat_id", options.chatId);
+    }
+
+    if (options?.todayOnly) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayISO = today.toISOString();
+      query = query.gte("created_at", todayISO);
     }
 
     if (options?.limit) {
@@ -95,7 +103,7 @@ export async function getUserUsage(options?: {
   }
 }
 
-export async function getUserUsageStats() {
+export async function getUserUsageStats(options?: { todayOnly?: boolean }) {
   const supabase = await createClient();
   const { data: user } = await getUser();
 
@@ -104,10 +112,19 @@ export async function getUserUsageStats() {
   }
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("usage")
       .select("input_tokens, output_tokens, reasoning_tokens, total_tokens")
       .eq("user_id", user.id);
+
+    if (options?.todayOnly) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayISO = today.toISOString();
+      query = query.gte("created_at", todayISO);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw new Error(error.message);

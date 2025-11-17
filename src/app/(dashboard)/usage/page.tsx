@@ -1,4 +1,3 @@
-import React from "react";
 import { getUserUsage, getUserUsageStats } from "@/actions/usage";
 import {
   Card,
@@ -16,15 +15,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Header } from "@/app/(dashboard)/components";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+import { DAILY_TOKEN_LIMIT } from "@/lib/constants";
 
 const UsagePage = async () => {
-  const { data: usageData, error: usageError } = await getUserUsage();
-  const { data: stats, error: statsError } = await getUserUsageStats();
-  const maxTokens = 128_000;
+  const { data: usageData, error: usageError } = await getUserUsage({
+    todayOnly: true,
+  });
+  const { data: stats, error: statsError } = await getUserUsageStats({
+    todayOnly: true,
+  });
 
   if (usageError || statsError) {
     return (
@@ -80,7 +82,7 @@ const UsagePage = async () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <Card>
               <CardHeader>
-                <CardDescription>Total Tokens</CardDescription>
+                <CardDescription>Today&apos;s Total Tokens</CardDescription>
                 <CardTitle className="text-3xl">
                   {formatNumber(stats?.totalTokens || 0)}
                 </CardTitle>
@@ -88,7 +90,7 @@ const UsagePage = async () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardDescription>Input Tokens</CardDescription>
+                <CardDescription>Today&apos;s Input Tokens</CardDescription>
                 <CardTitle className="text-3xl">
                   {formatNumber(stats?.totalInputTokens || 0)}
                 </CardTitle>
@@ -96,7 +98,7 @@ const UsagePage = async () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardDescription>Output Tokens</CardDescription>
+                <CardDescription>Today&apos;s Output Tokens</CardDescription>
                 <CardTitle className="text-3xl">
                   {formatNumber(stats?.totalOutputTokens || 0)}
                 </CardTitle>
@@ -104,7 +106,7 @@ const UsagePage = async () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardDescription>Reasoning Tokens</CardDescription>
+                <CardDescription>Today&apos;s Reasoning Tokens</CardDescription>
                 <CardTitle className="text-3xl">
                   {formatNumber(stats?.totalReasoningTokens || 0)}
                 </CardTitle>
@@ -112,9 +114,9 @@ const UsagePage = async () => {
             </Card>
             <Card>
               <CardHeader>
-                <CardDescription>Max Tokens</CardDescription>
+                <CardDescription>Daily Limit</CardDescription>
                 <CardTitle className="text-3xl">
-                  {formatNumber(maxTokens)}
+                  {formatNumber(DAILY_TOKEN_LIMIT)}
                 </CardTitle>
               </CardHeader>
             </Card>
@@ -124,13 +126,13 @@ const UsagePage = async () => {
             <CardHeader>
               <CardTitle>Usage History</CardTitle>
               <CardDescription>
-                Detailed breakdown of your API usage across all chats
+                Today&apos;s API usage across all chats
               </CardDescription>
             </CardHeader>
             <CardContent>
               {!usageData || usageData.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  No usage data available yet. Start chatting to see your usage
+                  No usage data for today yet. Start chatting to see your usage
                   statistics.
                 </div>
               ) : (
