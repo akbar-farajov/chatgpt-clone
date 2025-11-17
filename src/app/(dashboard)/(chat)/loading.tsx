@@ -1,7 +1,5 @@
-import { ChatSkeleton } from "./components";
-
-function Loading() {
-  return <ChatSkeleton />;
+function HomeLoading() {
+  return null;
 }
 
-export default Loading;
+export default HomeLoading;

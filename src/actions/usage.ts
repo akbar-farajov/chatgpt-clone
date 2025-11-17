@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { Tables, TablesInsert } from "@/lib/supabase/types";
 import type { LanguageModelUsage } from "ai";
 import { getUser } from "./auth";
+import { DAILY_TOKEN_LIMIT } from "@/lib/constants";
 
 export type Usage = Tables<"usage">;
 export type UsageInsert = TablesInsert<"usage">;
@@ -247,8 +248,6 @@ export async function deleteUsage(usageId: string) {
   }
 }
 
-const DAILY_TOKEN_LIMIT = 1000;
-
 export async function checkDailyUsageLimit() {
   const supabase = await createClient();
   const { data: user } = await getUser();
@@ -294,7 +293,6 @@ export async function checkDailyUsageLimit() {
     return { error: (error as Error).message, data: null };
   }
 }
-
 
 export async function updateDailyTokenCount(tokenCount: number) {
   const supabase = await createClient();

@@ -19,6 +19,8 @@ import { FC, useTransition, useState } from "react";
 import { ChatDeleteModal } from "./chat-delete-modal";
 import { Input } from "../ui/input";
 import { updateChat } from "@/actions/chat";
+import { mutate } from "swr";
+import { getChatHistoryKey } from "@/hooks/use-chats";
 
 interface NavChatsProps {
   chats: Chat[];
@@ -39,6 +41,7 @@ export const NavChats: FC<NavChatsProps> = ({
   const handleSaveRename = async (chatId: string) => {
     startTransition(async () => {
       await updateChat(chatId, { title: renameChat });
+      mutate(getChatHistoryKey());
       setRenameChatId(null);
       setRenameChat("");
     });
@@ -80,7 +83,6 @@ export const NavChats: FC<NavChatsProps> = ({
                 </SidebarMenuButton>
               </Link>
             )}
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction showOnHover>

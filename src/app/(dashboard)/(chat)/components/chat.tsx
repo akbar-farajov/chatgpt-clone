@@ -9,8 +9,9 @@ import { createChat } from "@/actions/chat";
 import { PromptInputMessage } from "@/components/ai-elements/prompt-input";
 import { ChatMessage } from "@/lib/types";
 import { generateUUID } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { mutate } from "swr";
+import { getChatHistoryKey } from "@/hooks/use-chats";
 
 interface ChatProps {
   chatId?: string;
@@ -28,7 +29,6 @@ export const Chat: FC<ChatProps> = ({
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
   );
-  const router = useRouter();
   const [input, setInput] = useState("");
   const [isCreatingChat, setIsCreatingChat] = useState(false);
 
@@ -81,7 +81,7 @@ export const Chat: FC<ChatProps> = ({
         console.log((event.data as LanguageModelUsage).outputTokens);
       }
       if (event.type === "data-title") {
-        router.refresh();
+        mutate(getChatHistoryKey());
       }
     },
     onError(error) {
@@ -117,6 +117,7 @@ export const Chat: FC<ChatProps> = ({
       const result = await createChat({ chatId });
       if (result.data?.id) {
         setCurrentChatId(result.data.id);
+        mutate(getChatHistoryKey());
       }
       setIsCreatingChat(false);
       return;

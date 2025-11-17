@@ -33,7 +33,6 @@ export async function createChat({ chatId }: { chatId: string }) {
     }
 
     revalidatePath("/", "layout");
-
     return { data, error: null };
   } catch (error) {
     console.error(error);
@@ -156,8 +155,6 @@ export async function updateChat(chatId: string, { title }: { title: string }) {
       throw new Error(error.message);
     }
 
-    revalidatePath("/", "layout");
-
     return data;
   } catch (error) {
     console.error(error);
@@ -173,8 +170,6 @@ export async function deleteChat(chatId: string) {
       .delete()
       .eq("id", chatId)
       .throwOnError();
-
-    revalidatePath("/", "layout");
 
     return data;
   } catch (error) {

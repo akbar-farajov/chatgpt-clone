@@ -1,17 +1,15 @@
 "use client";
 
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { Chat, Profile } from "@/lib/types";
+import { Profile } from "@/lib/types";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { FC } from "react";
 
 interface DashboardLayoutClientProps {
-  chatsPromise: Promise<Chat[]>;
   profilePromise: Promise<Profile | null>;
 }
 
 export const DashboardLayoutClient: FC<DashboardLayoutClientProps> = ({
-  chatsPromise,
   profilePromise,
 }) => {
   const segments = useSelectedLayoutSegments();
@@ -21,7 +19,6 @@ export const DashboardLayoutClient: FC<DashboardLayoutClientProps> = ({
 
   return (
     <AppSidebar
-      chatsPromise={chatsPromise}
       currentChatId={currentChatId}
       currentTitle={undefined}
       profilePromise={profilePromise}

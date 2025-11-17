@@ -13,6 +13,8 @@ import {
 import { Button } from "../ui/button";
 import { Spinner } from "../ui/spinner";
 import { toast } from "sonner";
+import { mutate } from "swr";
+import { getChatHistoryKey } from "@/hooks/use-chats";
 
 interface ChatDeleteModalProps {
   open: boolean;
@@ -34,6 +36,7 @@ export const ChatDeleteModal: FC<ChatDeleteModalProps> = ({
     startTransition(async () => {
       try {
         await deleteChat(chatId);
+        mutate(getChatHistoryKey());
         if (chatId === currentChatId) {
           router.push("/");
         }

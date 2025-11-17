@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { getChats } from "@/actions/chat";
 import { getProfile } from "@/actions/profile";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
@@ -18,7 +17,6 @@ export default async function DashboardLayout({
   }
 
   const profilePromise = getProfile().then((res) => res.data);
-  const chatsPromise = getChats().then((chats) => chats || []);
 
   const cookieStore = await cookies();
   const sidebarState = cookieStore.get("sidebar_state");
@@ -26,10 +24,7 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider defaultOpen={!isCollapsed}>
-      <DashboardLayoutClient
-        chatsPromise={chatsPromise}
-        profilePromise={profilePromise}
-      />
+      <DashboardLayoutClient profilePromise={profilePromise} />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
         <div className="flex-1 flex flex-col min-h-0">{children}</div>
       </SidebarInset>
