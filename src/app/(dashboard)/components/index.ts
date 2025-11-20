@@ -1,2 +1,2 @@
 export { DashboardLayoutClient } from "./dashboard-layout-client";
-export { Header, HeaderLeft, HeaderGitHubStar } from "./header";
+export { Header, HeaderGitHubStar } from "./header";
