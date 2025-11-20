@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { getUser } from "@/actions/auth";
 import { DashboardLayoutClient } from "./components";
+import { Provider } from "@ai-sdk-tools/store";
 
 export default async function DashboardLayout({
   children,
@@ -26,7 +27,7 @@ export default async function DashboardLayout({
     <SidebarProvider defaultOpen={!isCollapsed}>
       <DashboardLayoutClient profilePromise={profilePromise} />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
-        {children}
+        <Provider>{children}</Provider>
       </SidebarInset>
     </SidebarProvider>
   );

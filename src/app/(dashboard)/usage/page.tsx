@@ -15,9 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Header, HeaderLeft } from "@/app/(dashboard)/components";
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import { DAILY_TOKEN_LIMIT } from "@/lib/constants";
 
 const UsagePage = async () => {
@@ -31,14 +28,6 @@ const UsagePage = async () => {
   if (usageError || statsError) {
     return (
       <div className="flex flex-col h-full">
-        <Header
-          leftContent={<HeaderLeft title="Usage" />}
-          rightContent={
-            <Button variant="outline" size="sm">
-              Refresh
-            </Button>
-          }
-        />
         <div className="flex-1 flex items-center justify-center p-4">
           <Card>
             <CardHeader>
@@ -68,7 +57,7 @@ const UsagePage = async () => {
 
   return (
     <div className="flex flex-col h-full">
-      <Header
+      {/* <Header
         leftContent={<HeaderLeft title="Usage" />}
         rightContent={
           <Button size="sm" variant="outline" disabled>
@@ -76,7 +65,7 @@ const UsagePage = async () => {
             <span className="text-sm font-medium">Upgrade Plan</span>
           </Button>
         }
-      />
+      /> */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

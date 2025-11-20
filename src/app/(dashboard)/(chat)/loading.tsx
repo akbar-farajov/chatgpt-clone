@@ -1,10 +1,10 @@
-import { Header, HeaderLeft } from "../components";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Header } from "../components";
+import { ChatBreadcrumb } from "./components/chat-breadcrumb";
 
 function HomeLoading() {
   return (
     <>
-      <Header leftContent={<HeaderLeft title="Chat" />} />
+      <Header leftContent={<ChatBreadcrumb />} />
     </>
   );
 }

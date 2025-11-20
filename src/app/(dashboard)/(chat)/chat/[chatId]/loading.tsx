@@ -1,10 +1,10 @@
-import { Header, HeaderLeft } from "@/app/(dashboard)/components";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Header } from "@/app/(dashboard)/components";
+import { ChatBreadcrumb } from "../../components/chat-breadcrumb";
 
 export default function ChatLoading() {
   return (
     <>
-      <Header leftContent={<HeaderLeft title="Chat" />} />
+      <Header leftContent={<ChatBreadcrumb />} />
     </>
   );
 }

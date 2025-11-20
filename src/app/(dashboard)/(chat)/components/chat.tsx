@@ -12,12 +12,15 @@ import { generateUUID } from "@/lib/utils";
 import { toast } from "sonner";
 import { mutate } from "swr";
 import { getChatHistoryKey } from "@/hooks/use-chats";
+import { Header } from "@/app/(dashboard)/components";
+import { ChatBreadcrumb } from "./chat-breadcrumb";
 
 interface ChatProps {
   chatId?: string;
   initialMessages?: ChatMessage[];
   profile?: Profile;
   usage?: LanguageModelUsage;
+  chatTitle?: string;
 }
 
 export const Chat: FC<ChatProps> = ({
@@ -25,12 +28,14 @@ export const Chat: FC<ChatProps> = ({
   initialMessages = [],
   profile,
   usage,
+  chatTitle,
 }) => {
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
   );
   const [input, setInput] = useState("");
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const [title, setTitle] = useState(chatTitle);
 
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
@@ -81,6 +86,7 @@ export const Chat: FC<ChatProps> = ({
         console.log((event.data as LanguageModelUsage).outputTokens);
       }
       if (event.type === "data-title") {
+        setTitle(event.data as string);
         mutate(getChatHistoryKey());
       }
     },
@@ -129,6 +135,7 @@ export const Chat: FC<ChatProps> = ({
 
   return (
     <>
+      <Header leftContent={<ChatBreadcrumb chatTitle={title} />} />
       <Messages profile={profile} />
       <ChatComposer
         onSubmit={handleSubmit}

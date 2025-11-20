@@ -14,14 +14,8 @@ export const Header: FC<HeaderProps> = ({ leftContent, rightContent }) => {
     <div className="flex items-center justify-between border-b py-2 px-4">
       <div className="flex items-center justify-between gap-2 w-full">
         <div className="flex items-center gap-2">
-          {leftContent ? (
-            leftContent
-          ) : (
-            <>
-              <SidebarTrigger className="md:hidden" />
-              <h1 className="text-lg font-semibold hidden md:block">Chat</h1>
-            </>
-          )}
+          <SidebarTrigger className="md:hidden" />
+          {leftContent}
         </div>
         {rightContent ? (
           rightContent
@@ -42,21 +36,6 @@ export const Header: FC<HeaderProps> = ({ leftContent, rightContent }) => {
   );
 };
 
-// Reusable left content components
-interface HeaderLeftProps {
-  title: string;
-}
-
-export const HeaderLeft: FC<HeaderLeftProps> = ({ title }) => {
-  return (
-    <>
-      <SidebarTrigger className="md:hidden" />
-      <h1 className="text-lg font-semibold hidden md:block">{title}</h1>
-    </>
-  );
-};
-
-// Reusable right content component for GitHub star
 export const HeaderGitHubStar: FC = () => {
   return (
     <Button variant="outline" size="sm" asChild>

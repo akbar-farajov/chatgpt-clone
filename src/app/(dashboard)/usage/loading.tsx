@@ -7,23 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Header, HeaderLeft } from "../components";
-import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 
 const UsageLoading = () => {
   return (
     <div className="flex flex-col h-full">
-      <Header
-        leftContent={<HeaderLeft title="Usage" />}
-        rightContent={
-          <Button size="sm" variant="outline" disabled>
-            <Sparkles className="size-4  mr-2" />
-            <span className="text-sm font-medium">Upgrade Plan</span>
-          </Button>
-        }
-      />
-
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

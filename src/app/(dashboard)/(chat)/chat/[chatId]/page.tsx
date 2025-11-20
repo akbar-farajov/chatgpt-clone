@@ -5,10 +5,10 @@ import { notFound, redirect } from "next/navigation";
 import { ChatMessage } from "@/lib/types";
 import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
-import { Provider } from "@ai-sdk-tools/store";
 import { getChatUsageStats } from "@/actions/usage";
 import { LanguageModelUsage } from "ai";
-import { Header, HeaderLeft } from "@/app/(dashboard)/components";
+import { Header } from "@/app/(dashboard)/components";
+import { ChatBreadcrumb } from "../../components/chat-breadcrumb";
 
 interface Props {
   params: Promise<{ chatId: string }>;
@@ -52,15 +52,13 @@ const ChatPage: FC<Props> = async ({ params }) => {
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
     <>
-      <Header leftContent={<HeaderLeft title="Chat" />} />
-      <Provider key={chatId}>
-        <Chat
-          chatId={chatId}
-          initialMessages={initialMessages as ChatMessage[]}
-          profile={profile}
-          usage={usageStats as LanguageModelUsage}
-        />
-      </Provider>
+      <Chat
+        chatTitle={chat.title ?? undefined}
+        chatId={chatId}
+        initialMessages={initialMessages as ChatMessage[]}
+        profile={profile}
+        usage={usageStats as LanguageModelUsage}
+      />
     </>
   );
 };
