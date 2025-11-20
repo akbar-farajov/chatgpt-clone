@@ -32,6 +32,7 @@
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.1",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "@xyflow/react": "^12.8.6",
     "ai": "^5.0.76",
     "class-variance-authority": "^0.7.1",
