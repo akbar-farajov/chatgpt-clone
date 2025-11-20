@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import { Provider } from "@ai-sdk-tools/store";
 import { getChatUsageStats } from "@/actions/usage";
 import { LanguageModelUsage } from "ai";
+import { Header, HeaderLeft } from "@/app/(dashboard)/components";
 
 interface Props {
   params: Promise<{ chatId: string }>;
@@ -51,6 +52,7 @@ const ChatPage: FC<Props> = async ({ params }) => {
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   return (
     <>
+      <Header leftContent={<HeaderLeft title="Chat" />} />
       <Provider key={chatId}>
         <Chat
           chatId={chatId}

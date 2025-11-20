@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Header } from "@/app/(dashboard)/components";
+import { Header, HeaderLeft } from "@/app/(dashboard)/components";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { DAILY_TOKEN_LIMIT } from "@/lib/constants";
@@ -32,7 +32,7 @@ const UsagePage = async () => {
     return (
       <div className="flex flex-col h-full">
         <Header
-          title="Usage"
+          leftContent={<HeaderLeft title="Usage" />}
           rightContent={
             <Button variant="outline" size="sm">
               Refresh
@@ -69,7 +69,7 @@ const UsagePage = async () => {
   return (
     <div className="flex flex-col h-full">
       <Header
-        title="Usage"
+        leftContent={<HeaderLeft title="Usage" />}
         rightContent={
           <Button size="sm" variant="outline" disabled>
             <Sparkles className="size-4  mr-2" />
