@@ -7,9 +7,8 @@ import { getProfile } from "@/actions/profile";
 import { Metadata } from "next";
 import { getChatUsageStats } from "@/actions/usage";
 import { LanguageModelUsage } from "ai";
-import { Header } from "@/app/(dashboard)/components";
-import { ChatBreadcrumb } from "../../components/chat-breadcrumb";
 import { Provider } from "@ai-sdk-tools/store";
+import { cookies } from "next/headers";
 
 interface Props {
   params: Promise<{ chatId: string }>;
@@ -51,6 +50,9 @@ const ChatPage: FC<Props> = async ({ params }) => {
   }
 
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
+  const cookieStore = await cookies();
+  const modelIdFromCookie = cookieStore.get("chat-model");
+  console.log("modelIdFromCookie", modelIdFromCookie);
   return (
     <Provider>
       <Chat
@@ -59,6 +61,7 @@ const ChatPage: FC<Props> = async ({ params }) => {
         initialMessages={initialMessages as ChatMessage[]}
         profile={profile}
         usage={usageStats as LanguageModelUsage}
+        initialModel={modelIdFromCookie?.value}
       />
     </Provider>
   );

@@ -15,21 +15,11 @@ import {
   PromptInputAttachment,
   PromptInputMessage,
 } from "@/components/ai-elements/prompt-input";
-
 import { FC, useRef } from "react";
-import {
-  Context,
-  ContextCacheUsage,
-  ContextReasoningUsage,
-  ContextContentBody,
-  ContextOutputUsage,
-  ContextInputUsage,
-  ContextContentHeader,
-  ContextContent,
-  ContextTrigger,
-  ContextContentFooter,
-} from "@/components/ai-elements/context";
 import { LanguageModelUsage } from "ai";
+import { models } from "@/lib/ai/models";
+import { ChatModelSelector } from "./chat-model-selector";
+import { ChatContext } from "./chat-context";
 
 interface ChatComposerProps {
   onSubmit: (data: PromptInputMessage) => void;
@@ -37,17 +27,24 @@ interface ChatComposerProps {
   input: string;
   usage: LanguageModelUsage;
   isCreatingChat?: boolean;
+  onModelChange?: (modelId: string) => void;
+  selectedModel?: string;
 }
+
 export const ChatComposer: FC<ChatComposerProps> = ({
   setInput,
   input,
   onSubmit,
   usage,
   isCreatingChat = false,
+  onModelChange,
+  selectedModel,
 }) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const model = selectedModel || models[0].id;
   const { stop } = useChat();
   const chatStatus = useChatStatus();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
     <PromptInput
@@ -67,24 +64,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({
           />
         </div>
         <div className="flex w-max items-center justify-center">
-          <Context
-            maxTokens={128_000}
-            // modelId="openai:gpt-5"
-            usage={usage}
-            usedTokens={usage?.totalTokens ?? 0}
-          >
-            <ContextTrigger className="pr-4 cursor-pointer" />
-            <ContextContent>
-              <ContextContentHeader />
-              <ContextContentBody>
-                <ContextInputUsage />
-                <ContextOutputUsage />
-                <ContextReasoningUsage />
-                <ContextCacheUsage />
-              </ContextContentBody>
-              <ContextContentFooter />
-            </ContextContent>
-          </Context>
+          <ChatContext modelId={model} usage={usage} />
         </div>
       </PromptInputBody>
       <PromptInputFooter>
@@ -95,6 +75,10 @@ export const ChatComposer: FC<ChatComposerProps> = ({
               <PromptInputActionAddAttachments />
             </PromptInputActionMenuContent>
           </PromptInputActionMenu>
+          <ChatModelSelector
+            selectedModel={selectedModel}
+            onModelChange={onModelChange}
+          />
         </PromptInputTools>
         <PromptInputSubmit
           disabled={!input.trim() && chatStatus !== "streaming"}

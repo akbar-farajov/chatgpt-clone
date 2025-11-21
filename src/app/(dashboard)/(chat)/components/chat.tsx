@@ -15,6 +15,8 @@ import { getChatHistoryKey } from "@/hooks/use-chats";
 import { Header } from "@/app/(dashboard)/components";
 import { ChatBreadcrumb } from "./chat-breadcrumb";
 import { useRouter } from "next/navigation";
+import { models } from "@/lib/ai/models";
+import { saveChatModelAsCookie } from "@/actions/ai";
 
 interface ChatProps {
   chatId?: string;
@@ -22,6 +24,7 @@ interface ChatProps {
   profile?: Profile;
   usage?: LanguageModelUsage;
   chatTitle?: string;
+  initialModel?: string;
 }
 
 export const Chat: FC<ChatProps> = ({
@@ -30,6 +33,7 @@ export const Chat: FC<ChatProps> = ({
   profile,
   usage,
   chatTitle,
+  initialModel,
 }) => {
   const [currentChatId, setCurrentChatId] = useState<string | undefined>(
     initialChatId
@@ -37,9 +41,13 @@ export const Chat: FC<ChatProps> = ({
   const [input, setInput] = useState("");
   const [isCreatingChat, setIsCreatingChat] = useState(false);
   const [title, setTitle] = useState(chatTitle);
-  const router = useRouter();
-  const pendingMessageKey = "pending-chat-message";
+  const [currentModelId, setCurrentModelId] = useState(initialModel);
+  const currentModelIdRef = useRef(currentModelId);
   const pendingMessageRef = useRef<PromptInputMessage | null>(null);
+
+  useEffect(() => {
+    currentModelIdRef.current = currentModelId;
+  }, [currentModelId]);
 
   const { sendMessage } = useChat<ChatMessage>({
     id: currentChatId,
@@ -56,6 +64,7 @@ export const Chat: FC<ChatProps> = ({
                 id,
                 trigger,
                 message: messages.at(-1),
+                modelId: currentModelIdRef.current,
                 ...body,
               },
             };
@@ -66,6 +75,7 @@ export const Chat: FC<ChatProps> = ({
                 id,
                 trigger,
                 messageId,
+                modelId: currentModelIdRef.current,
                 ...body,
               },
             };
@@ -75,6 +85,7 @@ export const Chat: FC<ChatProps> = ({
               body: {
                 id,
                 trigger,
+                modelId: currentModelIdRef.current,
                 ...body,
               },
             };
@@ -100,6 +111,7 @@ export const Chat: FC<ChatProps> = ({
       }
     },
   });
+
   useEffect(() => {
     if (currentChatId && pendingMessageRef.current) {
       const message = pendingMessageRef.current;
@@ -145,6 +157,8 @@ export const Chat: FC<ChatProps> = ({
         input={input}
         usage={usage as LanguageModelUsage}
         isCreatingChat={isCreatingChat}
+        selectedModel={currentModelId}
+        onModelChange={setCurrentModelId}
       />
     </>
   );

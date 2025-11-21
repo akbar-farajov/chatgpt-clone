@@ -6,13 +6,13 @@ import {
   saveMessage,
   updateChat,
 } from "@/actions/chat";
-import { google } from "@ai-sdk/google";
 import {
   streamText,
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
   stepCountIs,
+  gateway,
 } from "ai";
 
 import { getTools } from "@/tools";
@@ -24,10 +24,17 @@ import {
   checkDailyUsageLimit,
   updateDailyTokenCount,
 } from "@/actions/usage";
+import { providers } from "@/lib/ai/providers";
+import { models } from "@/lib/ai/models";
 
 const tools = getTools();
 
 export const maxDuration = 30;
+
+function getProviderForModel(modelId: string): string {
+  const model = models.find((m) => m.id === modelId);
+  return model?.provider || "openai";
+}
 
 export async function POST(req: Request) {
   const {
@@ -35,12 +42,16 @@ export async function POST(req: Request) {
     id,
     trigger,
     messageId,
+    modelId,
   }: {
     message: ChatMessage;
     id: string;
     trigger: "submit-message" | "regenerate-message";
     messageId: string;
+    modelId?: string;
   } = await req.json();
+
+  console.log("model", modelId);
 
   const chat = await getChatById(id);
   switch (trigger) {
@@ -95,10 +106,16 @@ export async function POST(req: Request) {
     return new Response("No messages found", { status: 404 });
   }
 
+  // Get the selected model, default to first model if not provided
+  const selectedModelId = modelId || "gpt-4o-mini";
+  const providerModelId = `${getProviderForModel(
+    selectedModelId
+  )}:${selectedModelId}` as const;
+
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
       const result = streamText({
-        model: google("gemini-2.5-flash-lite"),
+        model: providers.languageModel(providerModelId as any),
         system: SYSTEM_PROMPT,
         messages: convertToModelMessages(messages),
         tools,
@@ -108,7 +125,7 @@ export async function POST(req: Request) {
           await createUsage({
             chatId: id,
             usage,
-            modelId: "google:gemini-2.5-flash-lite",
+            modelId: selectedModelId,
           });
 
           const totalTokens = usage.totalTokens || 0;
