@@ -27,7 +27,7 @@ export default async function DashboardLayout({
     <SidebarProvider defaultOpen={!isCollapsed}>
       <DashboardLayoutClient profilePromise={profilePromise} />
       <SidebarInset className="flex flex-col h-[100dvh] max-h-[100dvh]">
-        <Provider>{children}</Provider>
+        {children}
       </SidebarInset>
     </SidebarProvider>
   );
