@@ -52,7 +52,7 @@ const ChatPage: FC<Props> = async ({ params }) => {
   const initialMessages = (await getMessagesByChatId(chatId)) || [];
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get("chat-model");
-  console.log("modelIdFromCookie", modelIdFromCookie);
+
   return (
     <Provider>
       <Chat

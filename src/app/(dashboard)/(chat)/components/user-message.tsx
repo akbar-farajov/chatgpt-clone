@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import { CopyIcon, CheckIcon, PencilIcon } from "lucide-react";
 import { Message } from "@/components/ai-elements/message";
 import { MessageContent } from "@/components/ai-elements/message";
@@ -10,11 +10,11 @@ import { Actions } from "@/components/ai-elements/actions";
 import { ChatMessage } from "@/lib/types";
 import Image from "next/image";
 
-interface UserMessageProps {
+interface PureUserMessageProps {
   message: ChatMessage;
 }
 
-export const UserMessage: FC<UserMessageProps> = ({ message }) => {
+export const PureUserMessage: FC<PureUserMessageProps> = ({ message }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const handleCopy = async (text: string, messageId: string) => {
@@ -97,3 +97,5 @@ export const UserMessage: FC<UserMessageProps> = ({ message }) => {
     </Message>
   );
 };
+
+export const UserMessage = memo(PureUserMessage);

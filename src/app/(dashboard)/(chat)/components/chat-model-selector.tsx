@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import {
   ModelSelector,
   ModelSelectorContent,
@@ -17,12 +17,12 @@ import { CheckIcon } from "lucide-react";
 import { models } from "@/lib/ai/models";
 import { saveChatModelAsCookie } from "@/actions/ai";
 
-interface ChatModelSelectorProps {
+interface PureChatModelSelectorProps {
   selectedModel?: string;
   onModelChange?: (modelId: string) => void;
 }
 
-export const ChatModelSelector: FC<ChatModelSelectorProps> = ({
+export const PureChatModelSelector: FC<PureChatModelSelectorProps> = ({
   selectedModel,
   onModelChange,
 }) => {
@@ -78,3 +78,5 @@ export const ChatModelSelector: FC<ChatModelSelectorProps> = ({
     </ModelSelector>
   );
 };
+
+export const ChatModelSelector = memo(PureChatModelSelector);

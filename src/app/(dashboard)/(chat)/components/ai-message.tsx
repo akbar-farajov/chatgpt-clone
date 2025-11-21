@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import {
   CheckIcon,
   CopyIcon,
@@ -23,12 +23,12 @@ import {
 } from "@/components/ai-elements/tool";
 import { ChatMessage } from "@/lib/types";
 
-interface AIMessageProps {
+interface PureAIMessageProps {
   message: ChatMessage;
   isStreaming?: boolean;
 }
 
-export const AIMessage: FC<AIMessageProps> = ({
+export const PureAIMessage: FC<PureAIMessageProps> = ({
   message,
   isStreaming = false,
 }) => {
@@ -150,3 +150,5 @@ export const AIMessage: FC<AIMessageProps> = ({
     </Message>
   );
 };
+
+export const AIMessage = memo(PureAIMessage);

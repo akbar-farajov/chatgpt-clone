@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { FC, memo } from "react";
 import {
   Context,
   ContextCacheUsage,
@@ -14,13 +14,13 @@ import {
 } from "@/components/ai-elements/context";
 import { LanguageModelUsage } from "ai";
 
-interface ChatContextProps {
+interface PureChatContextProps {
   modelId: string;
   usage: LanguageModelUsage;
   maxTokens?: number;
 }
 
-export const ChatContext: FC<ChatContextProps> = ({
+export const PureChatContext: FC<PureChatContextProps> = ({
   modelId,
   usage,
   maxTokens = 128_000,
@@ -46,3 +46,16 @@ export const ChatContext: FC<ChatContextProps> = ({
     </Context>
   );
 };
+
+export const ChatContext = memo(PureChatContext, (prevProps, nextProps) => {
+  if (prevProps.modelId !== nextProps.modelId) {
+    return false;
+  }
+  if (prevProps.usage !== nextProps.usage) {
+    return false;
+  }
+  if (prevProps.maxTokens !== nextProps.maxTokens) {
+    return false;
+  }
+  return true;
+});

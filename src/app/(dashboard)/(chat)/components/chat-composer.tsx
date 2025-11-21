@@ -15,13 +15,13 @@ import {
   PromptInputAttachment,
   PromptInputMessage,
 } from "@/components/ai-elements/prompt-input";
-import { FC, useRef } from "react";
+import { FC, memo, useRef } from "react";
 import { LanguageModelUsage } from "ai";
 import { models } from "@/lib/ai/models";
 import { ChatModelSelector } from "./chat-model-selector";
 import { ChatContext } from "./chat-context";
 
-interface ChatComposerProps {
+interface PureChatComposerProps {
   onSubmit: (data: PromptInputMessage) => void;
   setInput: (input: string) => void;
   input: string;
@@ -31,7 +31,7 @@ interface ChatComposerProps {
   selectedModel?: string;
 }
 
-export const ChatComposer: FC<ChatComposerProps> = ({
+export const PureChatComposer: FC<PureChatComposerProps> = ({
   setInput,
   input,
   onSubmit,
@@ -89,3 +89,17 @@ export const ChatComposer: FC<ChatComposerProps> = ({
     </PromptInput>
   );
 };
+
+export const ChatComposer = memo(PureChatComposer, (prevProps, nextProps) => {
+  if (prevProps.input !== nextProps.input) {
+    return false;
+  }
+  if (prevProps.usage !== nextProps.usage) {
+    return false;
+  }
+  if (prevProps.selectedModel !== nextProps.selectedModel) {
+    return false;
+  }
+
+  return true;
+});

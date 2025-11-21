@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Conversation } from "@/components/ai-elements/conversation";
 import { ConversationContent } from "@/components/ai-elements/conversation";
 import { ConversationEmptyState } from "@/components/ai-elements/conversation";
@@ -16,11 +16,11 @@ import {
   useChatStatus,
 } from "@ai-sdk-tools/store";
 
-interface MessagesProps {
+interface PureMessagesProps {
   profile?: Profile;
 }
 
-export const Messages: FC<MessagesProps> = ({ profile }) => {
+export const PureMessages: FC<PureMessagesProps> = ({ profile }) => {
   const chatStatus = useChatStatus();
   const messages = useChatMessages<ChatMessage>();
   const error = useChatError();
@@ -65,3 +65,5 @@ export const Messages: FC<MessagesProps> = ({ profile }) => {
     </Conversation>
   );
 };
+
+export const Messages = memo(PureMessages);

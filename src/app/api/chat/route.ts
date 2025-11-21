@@ -51,8 +51,6 @@ export async function POST(req: Request) {
     modelId?: string;
   } = await req.json();
 
-  console.log("model", modelId);
-
   const chat = await getChatById(id);
   switch (trigger) {
     case "submit-message": {
