@@ -39,6 +39,7 @@ export const Chat: FC<ChatProps> = ({
   const [title, setTitle] = useState(chatTitle);
   const router = useRouter();
   const pendingMessageKey = "pending-chat-message";
+  const pendingMessageRef = useRef<PromptInputMessage | null>(null);
 
   const { sendMessage } = useChat<ChatMessage>({
     id: currentChatId,
@@ -100,13 +101,12 @@ export const Chat: FC<ChatProps> = ({
     },
   });
   useEffect(() => {
-    if (currentChatId) {
-      const pending = sessionStorage.getItem(pendingMessageKey);
-      if (pending) {
-        sessionStorage.removeItem(pendingMessageKey);
-        const message = JSON.parse(pending) as PromptInputMessage;
-        sendMessage({ text: message.text || "", files: message.files || [] });
-      }
+    if (currentChatId && pendingMessageRef.current) {
+      const message = pendingMessageRef.current;
+      pendingMessageRef.current = null;
+      window.history.replaceState({}, "", `/chat/${currentChatId}`);
+      sendMessage({ text: message.text || "", files: message.files || [] });
+      setInput("");
     }
   }, [currentChatId, sendMessage]);
 
@@ -120,20 +120,13 @@ export const Chat: FC<ChatProps> = ({
 
     if (!currentChatId) {
       setIsCreatingChat(true);
-
-      // Store message for after navigation
-      sessionStorage.setItem(pendingMessageKey, JSON.stringify(data));
-
+      pendingMessageRef.current = data;
       const chatId = generateUUID();
       const result = await createChat({ chatId });
-
       if (result.data?.id) {
+        setCurrentChatId(result.data.id);
         mutate(getChatHistoryKey());
-        // Use router.push for proper Next.js navigation
-        // This will remount the Provider on the new page
-        router.push(`/chat/${result.data.id}`);
       }
-
       setIsCreatingChat(false);
       return;
     }
